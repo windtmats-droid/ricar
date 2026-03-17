@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Download, Mail } from "lucide-react";
