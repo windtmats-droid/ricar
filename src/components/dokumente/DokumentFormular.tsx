@@ -60,7 +60,7 @@ export function DokumentFormular({ data, update, updateKaeufer }: Props) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-[14px] font-medium">Fahrzeug & Käufer</CardTitle>
+        <CardTitle className="text-[14px] font-medium">Inserat & Käufer</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Fahrzeug */}
