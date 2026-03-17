@@ -143,7 +143,17 @@ export function DokumentFormular({ data, update, updateKaeufer }: Props) {
           </div>
           <div className="mt-2">
             <Label className="text-[11px]">Geburtsdatum</Label>
-            <Input type="date" value={data.kaeufer.geburtsdatum} onChange={(e) => updateKaeufer({ geburtsdatum: e.target.value })} className="h-9 text-[13px]" />
+            <Input
+              type="text"
+              placeholder="TT.MM.JJJJ"
+              value={geburtsdatumInput}
+              onChange={(e) => { setGeburtsdatumInput(e.target.value); setGeburtsdatumError(false); }}
+              onBlur={handleGeburtsdatumBlur}
+              className={`h-9 text-[13px] ${geburtsdatumError ? "border-destructive focus-visible:ring-destructive" : ""}`}
+            />
+            {geburtsdatumError && (
+              <p className="text-[11px] text-destructive mt-1">Bitte im Format TT.MM.JJJJ eingeben</p>
+            )}
           </div>
         </div>
       </CardContent>
