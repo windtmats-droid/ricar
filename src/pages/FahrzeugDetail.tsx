@@ -147,9 +147,9 @@ const FahrzeugDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen w-full bg-background">
+      <div className="flex h-screen w-full bg-background overflow-hidden">
         <DashboardSidebar />
-        <main className="flex-1 p-6 flex items-center justify-center">
+        <main className="flex-1 p-6 flex items-center justify-center overflow-y-auto">
           <div className="text-sm text-muted-foreground">Laden…</div>
         </main>
       </div>
