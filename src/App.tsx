@@ -17,6 +17,7 @@ import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import Analytics from "./pages/Analytics.tsx";
+import Kalkulation from "./pages/Kalkulation.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
