@@ -210,17 +210,29 @@ const FahrzeugDetail = () => {
           baujahr={f.baujahr}
           status={f.status}
           id={id || "sample"}
+          isEditing={isEditing}
           onArchive={handleArchive}
+          onEdit={startEditing}
+          onSave={saveEditing}
+          onCancel={cancelEditing}
         />
 
         <div className="grid grid-cols-[1fr_380px] gap-5 mt-5">
-          {/* Left column */}
           <div className="space-y-4">
             <Fotogalerie photos={photoUrls} />
-            <FahrzeugDatenCard fahrzeug={f} standzeit={standzeit} />
+            <FahrzeugDatenCard
+              fahrzeug={f}
+              standzeit={standzeit}
+              isEditing={isEditing}
+              editData={editData || undefined}
+              onEditChange={updateEditData}
+            />
             <InseratstextDetailCard
               beschreibung={f.beschreibung}
               onSave={handleSaveBeschreibung}
+              isEditing={isEditing}
+              editBeschreibung={editBeschreibung}
+              onEditBeschreibungChange={setEditBeschreibung}
             />
             <AusstattungCard ausstattung={ausstattung} />
           </div>
