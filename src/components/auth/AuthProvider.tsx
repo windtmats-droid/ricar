@@ -72,14 +72,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Route protection
-  useEffect(() => {
-    if (loading) return;
-    const isPublic = PUBLIC_ROUTES.some((r) => location.pathname === r);
-    if (!user && !isPublic) {
-      navigate("/login");
-    }
-  }, [user, loading, location.pathname, navigate]);
+  // Route protection — temporarily disabled for development
+  // useEffect(() => {
+  //   if (loading) return;
+  //   const isPublic = PUBLIC_ROUTES.some((r) => location.pathname === r);
+  //   if (!user && !isPublic) {
+  //     navigate("/login");
+  //   }
+  // }, [user, loading, location.pathname, navigate]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
