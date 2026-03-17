@@ -17,17 +17,7 @@ import { KiZeitersparnis } from "@/components/analytics/KiZeitersparnis";
 const periods = ["Diese Woche", "Diesen Monat", "Dieses Jahr"] as const;
 
 const Analytics = () => {
-  const { profile, loading } = useAuth();
-  const navigate = useNavigate();
   const [period, setPeriod] = useState<string>("Diesen Monat");
-
-  useEffect(() => {
-    if (!loading && profile && profile.rolle !== "chef") {
-      navigate("/dashboard");
-    }
-  }, [loading, profile, navigate]);
-
-  if (loading) return null;
 
   return (
     <div className="flex min-h-screen w-full bg-background">
