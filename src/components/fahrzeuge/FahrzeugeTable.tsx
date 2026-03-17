@@ -68,8 +68,12 @@ export function FahrzeugeTable({ rows, selectedIds, onToggleSelect, onToggleAll,
             const sc = statusConfig[row.status] || statusConfig.Entwurf;
             const subtitleParts = [row.baujahr, row.kraftstoff, row.getriebe].filter(Boolean);
             return (
-              <tr key={row.id} className="border-b border-border last:border-0 h-14 group hover:bg-muted/30 transition-colors">
-                <td className="px-3">
+              <tr
+                key={row.id}
+                onClick={() => navigate(`/fahrzeuge/${row.id}`)}
+                className="border-b border-border last:border-0 h-14 group hover:bg-[hsl(216,20%,97%)] transition-colors cursor-pointer"
+              >
+                <td className="px-3" onClick={(e) => e.stopPropagation()}>
                   <Checkbox
                     checked={selectedIds.has(row.id)}
                     onCheckedChange={() => onToggleSelect(row.id)}
@@ -104,7 +108,7 @@ export function FahrzeugeTable({ rows, selectedIds, onToggleSelect, onToggleAll,
                 <td className="px-3 text-right">
                   <StandzeitCell days={row.standzeit} />
                 </td>
-                <td className="px-3 text-right">
+                <td className="px-3 text-right" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => navigate(`/fahrzeuge/${row.id}/bearbeiten`)}
