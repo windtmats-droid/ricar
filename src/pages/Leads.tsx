@@ -8,6 +8,7 @@ import { LeadsTable } from "@/components/leads/LeadsTable";
 import { LeadsKanban } from "@/components/leads/LeadsKanban";
 import { LeadDetailPanel } from "@/components/leads/LeadDetailPanel";
 import { LeadHinzufuegenModal } from "@/components/leads/LeadHinzufuegenModal";
+import { LeadsKiDetailModal } from "@/components/leads/LeadsKiDetailModal";
 import { FahrzeugePagination } from "@/components/fahrzeuge/FahrzeugePagination";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
