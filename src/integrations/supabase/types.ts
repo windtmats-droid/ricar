@@ -157,6 +157,62 @@ export type Database = {
           },
         ]
       }
+      kalkulationen: {
+        Row: {
+          ankaufspreis: number
+          aufbereitungskosten_json: Json | null
+          autohaus_id: string | null
+          empfohlener_vk: number | null
+          erstellt_at: string
+          fahrzeug_id: string | null
+          id: string
+          marge_prozent: number | null
+          markt_avg: number | null
+          mindestpreis: number | null
+          notizen: string | null
+          provision_prozent: number | null
+          ueberfuehrung: number | null
+        }
+        Insert: {
+          ankaufspreis?: number
+          aufbereitungskosten_json?: Json | null
+          autohaus_id?: string | null
+          empfohlener_vk?: number | null
+          erstellt_at?: string
+          fahrzeug_id?: string | null
+          id?: string
+          marge_prozent?: number | null
+          markt_avg?: number | null
+          mindestpreis?: number | null
+          notizen?: string | null
+          provision_prozent?: number | null
+          ueberfuehrung?: number | null
+        }
+        Update: {
+          ankaufspreis?: number
+          aufbereitungskosten_json?: Json | null
+          autohaus_id?: string | null
+          empfohlener_vk?: number | null
+          erstellt_at?: string
+          fahrzeug_id?: string | null
+          id?: string
+          marge_prozent?: number | null
+          markt_avg?: number | null
+          mindestpreis?: number | null
+          notizen?: string | null
+          provision_prozent?: number | null
+          ueberfuehrung?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kalkulationen_fahrzeug_id_fkey"
+            columns: ["fahrzeug_id"]
+            isOneToOne: false
+            referencedRelation: "fahrzeuge"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ki_aktionen: {
         Row: {
           aktion_typ: string
