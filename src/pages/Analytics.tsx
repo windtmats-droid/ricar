@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
-import { useAuth } from "@/components/auth/AuthProvider";
 import { Download, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnalyticsKPIs } from "@/components/analytics/AnalyticsKPIs";
@@ -17,17 +15,7 @@ import { KiZeitersparnis } from "@/components/analytics/KiZeitersparnis";
 const periods = ["Diese Woche", "Diesen Monat", "Dieses Jahr"] as const;
 
 const Analytics = () => {
-  const { profile, loading } = useAuth();
-  const navigate = useNavigate();
   const [period, setPeriod] = useState<string>("Diesen Monat");
-
-  useEffect(() => {
-    if (!loading && profile && profile.rolle !== "chef") {
-      navigate("/dashboard");
-    }
-  }, [loading, profile, navigate]);
-
-  if (loading) return null;
 
   return (
     <div className="flex min-h-screen w-full bg-background">
