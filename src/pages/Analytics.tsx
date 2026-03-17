@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Download, Mail } from "lucide-react";
-import { Download, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnalyticsKPIs } from "@/components/analytics/AnalyticsKPIs";
 import { KiPerformanceBanner } from "@/components/analytics/KiPerformanceBanner";
