@@ -27,7 +27,7 @@ export function InseratstextCard({ beschreibung, onChange, getFormData }: Props)
   const handleGenerate = async () => {
     if (!getFormData) return;
     const daten = getFormData();
-    console.log("KI-Request Daten:", daten);
+    console.log("Sending to webhook:", JSON.stringify(daten, null, 2));
     setLoading(true);
     try {
       const res = await fetch(WEBHOOK_URL, {
@@ -35,11 +35,19 @@ export function InseratstextCard({ beschreibung, onChange, getFormData }: Props)
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(daten),
       });
-      const data = await res.json();
+      console.log("Response status:", res.status);
+      const raw = await res.text();
+      console.log("Raw response body:", raw);
+      const data = JSON.parse(raw);
       const text = data?.content?.[0]?.text;
-      if (text) onChange(text);
+      if (text) {
+        onChange(text);
+      } else {
+        alert("Keine Beschreibung in der Antwort gefunden. Siehe Konsole für Details.");
+      }
     } catch (err) {
       console.error("KI-Beschreibung Fehler:", err);
+      alert("Fehler beim Generieren: " + (err instanceof Error ? err.message : String(err)));
     } finally {
       setLoading(false);
     }
