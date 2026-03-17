@@ -65,9 +65,9 @@ export function DokumentFormular({ data, update, updateKaeufer }: Props) {
       <CardContent className="space-y-4">
         {/* Fahrzeug */}
         <div>
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">Fahrzeug</div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">Inserat</div>
           <Select value={data.fahrzeugId || ""} onValueChange={selectFahrzeug}>
-            <SelectTrigger className="h-9 text-[13px]"><SelectValue placeholder="Fahrzeug auswählen..." /></SelectTrigger>
+            <SelectTrigger className="h-9 text-[13px]"><SelectValue placeholder="Inserat auswählen..." /></SelectTrigger>
             <SelectContent>
               {fahrzeuge.map((f) => (
                 <SelectItem key={f.id} value={f.id} className="text-[13px]">

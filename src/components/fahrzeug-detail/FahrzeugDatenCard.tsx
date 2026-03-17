@@ -114,7 +114,7 @@ export function FahrzeugDatenCard({ fahrzeug: f, standzeit, isEditing, editData,
 
   return (
     <div className="bg-card border border-border rounded-xl p-5">
-      <h3 className="text-sm font-medium text-foreground mb-3">Fahrzeugdaten</h3>
+      <h3 className="text-sm font-medium text-foreground mb-3">Inseratsdaten</h3>
       <div className="grid grid-cols-2 gap-x-6">
         <div>
           <ReadRow label="Marke" value={f.marke} />

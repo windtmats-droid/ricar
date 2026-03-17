@@ -70,7 +70,7 @@ export function FahrzeugDetailHeader({ marke, modell, baujahr, status, id, isEdi
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Fahrzeug archivieren?</AlertDialogTitle>
+                    <AlertDialogTitle>Inserat archivieren?</AlertDialogTitle>
                     <AlertDialogDescription>{marke} {modell} wird als archiviert markiert.</AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

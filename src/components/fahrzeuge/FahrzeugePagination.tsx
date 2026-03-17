@@ -16,7 +16,7 @@ export function FahrzeugePagination({ page, totalPages, totalCount, pageSize, on
   return (
     <div className="flex items-center justify-between mt-3 px-1">
       <span className="text-[12px] text-muted-foreground">
-        {from}–{to} von {totalCount} Fahrzeugen
+        {from}–{to} von {totalCount} Inseraten
       </span>
       <div className="flex items-center gap-1">
         <Button

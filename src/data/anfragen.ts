@@ -127,7 +127,7 @@ export const SAMPLE_ANFRAGEN: Anfrage[] = [
     source: "E-Mail",
     fahrzeug: "Opel Insignia",
     fahrzeugId: "s5",
-    preview: "Das Fahrzeug ist ja schon länger online...",
+    preview: "Das Inserat ist ja schon länger online...",
     fullMessage: "Hallo, mir ist aufgefallen, dass der Opel Insignia schon länger online steht. Ist noch alles in Ordnung mit dem Fahrzeug? Wäre ein Preisnachlass möglich?\n\nJulia Lang",
     timestamp: "gestern",
     bewertung: "Niedrig",

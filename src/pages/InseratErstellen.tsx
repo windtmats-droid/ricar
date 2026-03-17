@@ -157,7 +157,7 @@ const InseratErstellen = () => {
         <div className="mb-6">
           <h1 className="text-lg font-medium text-foreground">Inserat erstellen</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Neues Fahrzeug anlegen und KI-Inserat generieren
+            Neues Inserat anlegen und KI-Text generieren
           </p>
         </div>
 

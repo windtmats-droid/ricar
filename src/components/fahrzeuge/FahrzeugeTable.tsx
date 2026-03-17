@@ -126,7 +126,7 @@ export function FahrzeugeTable({ rows, selectedIds, onToggleSelect, onToggleAll,
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Fahrzeug archivieren?</AlertDialogTitle>
+                          <AlertDialogTitle>Inserat archivieren?</AlertDialogTitle>
                           <AlertDialogDescription>
                             {row.marke} {row.modell} wird als archiviert markiert. Dies kann jederzeit rückgängig gemacht werden.
                           </AlertDialogDescription>

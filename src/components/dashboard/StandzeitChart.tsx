@@ -29,7 +29,7 @@ export function StandzeitChart() {
       <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
         <span className="text-[10px] text-muted-foreground">Ziel: unter 30 Tage</span>
         <span className="text-[10px] font-medium text-destructive bg-destructive/10 px-2 py-0.5 rounded-full">
-          2 Fahrzeuge überfällig
+          2 Inserate überfällig
         </span>
       </div>
     </div>

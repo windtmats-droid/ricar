@@ -40,7 +40,7 @@ export function KalkulationFahrzeug({ data, update }: Props) {
           }}
         >
           <SelectTrigger className="h-9 text-[13px]">
-            <SelectValue placeholder="Fahrzeug aus Bestand wählen" />
+            <SelectValue placeholder="Inserat aus Bestand wählen" />
           </SelectTrigger>
           <SelectContent>
             {fahrzeuge.map((f) => (

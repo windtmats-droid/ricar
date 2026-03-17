@@ -32,7 +32,7 @@ function OptionalLabel({ children }: { children: React.ReactNode }) {
 export function FahrzeugdatenCard({ form, updateField }: Props) {
   return (
     <div className="bg-card border border-border rounded-xl p-5">
-      <h3 className="text-sm font-medium text-foreground mb-4">Fahrzeugdaten</h3>
+      <h3 className="text-sm font-medium text-foreground mb-4">Inseratsdaten</h3>
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-3">
         {/* Row 1 */}

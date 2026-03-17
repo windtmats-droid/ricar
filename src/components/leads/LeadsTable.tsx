@@ -27,7 +27,7 @@ export function LeadsTable({ rows, selectedIds, allSelected, onToggleSelect, onT
               <Checkbox checked={allSelected} onCheckedChange={(c) => onToggleAll(!!c)} />
             </TableHead>
             <TableHead className="text-[11px] uppercase tracking-wider font-semibold">Name</TableHead>
-            <TableHead className="text-[11px] uppercase tracking-wider font-semibold">Fahrzeug</TableHead>
+            <TableHead className="text-[11px] uppercase tracking-wider font-semibold">Inserat</TableHead>
             <TableHead className="text-[11px] uppercase tracking-wider font-semibold">Status</TableHead>
             <TableHead className="text-[11px] uppercase tracking-wider font-semibold">Priorität</TableHead>
             <TableHead className="text-[11px] uppercase tracking-wider font-semibold">Quelle</TableHead>
