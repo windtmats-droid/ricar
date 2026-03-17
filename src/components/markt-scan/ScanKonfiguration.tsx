@@ -44,9 +44,9 @@ export function ScanKonfiguration({ fahrzeuge }: ScanKonfigurationProps) {
 
       {/* Section A - Einzelnes Fahrzeug */}
       <div className="space-y-3">
-        <div className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">Fahrzeug aus Bestand</div>
+        <div className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">Inserat aus Bestand</div>
         <Select value={selectedFahrzeug} onValueChange={setSelectedFahrzeug}>
-          <SelectTrigger className="h-9 text-[12px]"><SelectValue placeholder="Fahrzeug auswählen..." /></SelectTrigger>
+          <SelectTrigger className="h-9 text-[12px]"><SelectValue placeholder="Inserat auswählen..." /></SelectTrigger>
           <SelectContent>
             {fahrzeuge.map((f) => (
               <SelectItem key={f.id} value={f.id}>{f.marke} {f.modell} {f.baujahr || ""}</SelectItem>

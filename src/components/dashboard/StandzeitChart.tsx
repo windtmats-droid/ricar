@@ -12,8 +12,8 @@ export function StandzeitChart() {
   return (
     <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-medium text-foreground">Standzeit nach Fahrzeug</h3>
-        <button className="text-xs text-primary hover:underline">Alle Fahrzeuge</button>
+        <h3 className="text-sm font-medium text-foreground">Standzeit nach Inserat</h3>
+        <button className="text-xs text-primary hover:underline">Alle Inserate</button>
       </div>
       <div className="space-y-3 flex-1">
         {vehicles.map((v) => (
@@ -29,7 +29,7 @@ export function StandzeitChart() {
       <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
         <span className="text-[10px] text-muted-foreground">Ziel: unter 30 Tage</span>
         <span className="text-[10px] font-medium text-destructive bg-destructive/10 px-2 py-0.5 rounded-full">
-          2 Fahrzeuge überfällig
+          2 Inserate überfällig
         </span>
       </div>
     </div>

@@ -31,9 +31,9 @@ const navSections = [
     ],
   },
   {
-    label: "Fahrzeuge",
+    label: "Inserate",
     items: [
-      { icon: Car, label: "Fahrzeuge", path: "/fahrzeuge", badge: "34", badgeColor: "bg-primary/10 text-primary" },
+      { icon: Car, label: "Inserate", path: "/fahrzeuge", badge: "34", badgeColor: "bg-primary/10 text-primary" },
       { icon: PlusSquare, label: "Inserat erstellen", path: "/inserate/neu" },
       { icon: Users, label: "Leads & CRM", path: "/leads", badge: "7", badgeColor: "bg-warning/15 text-warning" },
     ],

@@ -174,7 +174,7 @@ const FahrzeugDetail = () => {
     };
     updateMutation.mutate(updates, {
       onSuccess: () => {
-        sonnerToast.success("Fahrzeug erfolgreich aktualisiert");
+        sonnerToast.success("Inserat erfolgreich aktualisiert");
         setIsEditing(false);
         setEditData(null);
       },

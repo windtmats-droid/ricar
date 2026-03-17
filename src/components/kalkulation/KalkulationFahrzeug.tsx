@@ -29,7 +29,7 @@ export function KalkulationFahrzeug({ data, update }: Props) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-[14px] font-medium">Fahrzeug auswählen</CardTitle>
+        <CardTitle className="text-[14px] font-medium">Inserat auswählen</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <Select
@@ -40,7 +40,7 @@ export function KalkulationFahrzeug({ data, update }: Props) {
           }}
         >
           <SelectTrigger className="h-9 text-[13px]">
-            <SelectValue placeholder="Fahrzeug aus Bestand wählen" />
+            <SelectValue placeholder="Inserat aus Bestand wählen" />
           </SelectTrigger>
           <SelectContent>
             {fahrzeuge.map((f) => (

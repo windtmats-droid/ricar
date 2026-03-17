@@ -15,11 +15,11 @@ export function FahrzeugeEmptyState({ hasActiveFilter, onReset }: Props) {
       <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mb-4">
         <Car className="w-7 h-7 text-muted-foreground" />
       </div>
-      <h3 className="text-sm font-medium text-foreground">Keine Fahrzeuge gefunden</h3>
+      <h3 className="text-sm font-medium text-foreground">Keine Inserate gefunden</h3>
       <p className="text-xs text-muted-foreground mt-1">
         {hasActiveFilter
           ? "Filter anpassen oder neues Inserat erstellen"
-          : "Erstelle dein erstes Fahrzeug-Inserat"}
+          : "Erstelle dein erstes Inserat"}
       </p>
       <div className="flex gap-2 mt-4">
         {hasActiveFilter && (

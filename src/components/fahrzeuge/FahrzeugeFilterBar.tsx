@@ -73,7 +73,7 @@ export function FahrzeugeFilterBar({ filters, setFilters, resultCount, hasActive
 
       <div className="flex-1" />
 
-      <span className="text-[12px] text-muted-foreground shrink-0">{resultCount} Fahrzeuge</span>
+      <span className="text-[12px] text-muted-foreground shrink-0">{resultCount} Inserate</span>
 
       {hasActiveFilter && (
         <button

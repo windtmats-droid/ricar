@@ -14,8 +14,8 @@ export function FahrzeugeHeader({ search, onSearchChange }: Props) {
   return (
     <div className="flex items-start justify-between mb-5">
       <div>
-        <h1 className="text-lg font-medium text-foreground">Fahrzeuge</h1>
-        <p className="text-xs text-muted-foreground mt-0.5">Fahrzeugbestand verwalten</p>
+        <h1 className="text-lg font-medium text-foreground">Inserate</h1>
+        <p className="text-xs text-muted-foreground mt-0.5">Inseratsbestand verwalten</p>
       </div>
       <div className="flex items-center gap-2">
         <div className="relative">

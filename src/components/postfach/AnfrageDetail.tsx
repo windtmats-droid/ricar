@@ -107,7 +107,7 @@ export function AnfrageDetail({ anfrage: a, onMarkRead, onArchive }: Props) {
 
         <div className="space-y-2 mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-muted-foreground w-20 shrink-0">Fahrzeug</span>
+            <span className="text-[11px] text-muted-foreground w-20 shrink-0">Inserat</span>
             <button
               onClick={() => navigate(`/fahrzeuge/${a.fahrzeugId}`)}
               className="text-[12px] text-primary hover:underline"

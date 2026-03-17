@@ -54,7 +54,7 @@ export function LeadDetailPanel({ lead, onClose, onStatusChange, onSaveNote }: L
         {/* Fahrzeug */}
         {lead.fahrzeug_label && (
           <div className="space-y-2">
-            <h3 className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">Fahrzeug</h3>
+            <h3 className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">Inserat</h3>
             <div className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/50">
               <div className="w-12 h-9 rounded bg-muted flex items-center justify-center text-muted-foreground text-[10px]">Foto</div>
               <div className="min-w-0 flex-1">
