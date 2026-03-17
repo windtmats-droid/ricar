@@ -55,7 +55,7 @@ export function FahrzeugeTable({ rows, selectedIds, onToggleSelect, onToggleAll,
               />
             </th>
             <th className="text-[11px] uppercase text-muted-foreground font-semibold tracking-wider text-left px-3 py-3 w-14">Foto</th>
-            <th className="text-[11px] uppercase text-muted-foreground font-semibold tracking-wider text-left px-3 py-3">Fahrzeug</th>
+            <th className="text-[11px] uppercase text-muted-foreground font-semibold tracking-wider text-left px-3 py-3">Inserat</th>
             <th className="text-[11px] uppercase text-muted-foreground font-semibold tracking-wider text-left px-3 py-3 w-24">Status</th>
             <th className="text-[11px] uppercase text-muted-foreground font-semibold tracking-wider text-right px-3 py-3 w-28">Preis</th>
             <th className="text-[11px] uppercase text-muted-foreground font-semibold tracking-wider text-right px-3 py-3 w-28">Kilometer</th>
