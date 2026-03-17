@@ -36,7 +36,7 @@ export function FahrzeugDetailHeader({ marke, modell, baujahr, status, id, isEdi
         onClick={() => navigate("/fahrzeuge")}
         className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-3"
       >
-        <ArrowLeft className="w-3.5 h-3.5" /> Fahrzeuge
+        <ArrowLeft className="w-3.5 h-3.5" /> Inserate
       </button>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
