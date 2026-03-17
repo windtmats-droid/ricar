@@ -63,9 +63,9 @@ const Einstellungen = () => {
   const scanConfig = (settings?.scan_config_json as any) || {};
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-6 overflow-y-auto">
         <div className="mb-5">
           <h1 className="text-[18px] font-medium text-foreground">Einstellungen</h1>
           <p className="text-[13px] text-muted-foreground mt-0.5">Autohaus-Profil und Integrationen verwalten</p>

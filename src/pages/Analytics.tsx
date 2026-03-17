@@ -18,9 +18,9 @@ const Analytics = () => {
   const [period, setPeriod] = useState<string>("Diesen Monat");
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-6 overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>

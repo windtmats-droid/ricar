@@ -64,9 +64,9 @@ const Dokumente = () => {
   const resetForm = () => setData({ ...defaultData, kaeufer: { ...defaultKaeufer } });
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-6 overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-[18px] font-medium text-foreground">Dokumente</h1>

@@ -136,9 +136,9 @@ const Fahrzeuge = () => {
   const allMarken = [...new Set(rows.map((r) => r.marke))].sort();
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-6 overflow-y-auto">
         <FahrzeugeHeader
           search={filters.search}
           onSearchChange={(v) => { setFilters((p) => ({ ...p, search: v })); setPage(1); }}

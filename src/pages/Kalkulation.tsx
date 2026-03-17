@@ -58,9 +58,9 @@ const Kalkulation = () => {
   const resetForm = () => setData({ ...defaultData, aufbereitung: defaultData.aufbereitung.map((a) => ({ ...a, value: 0 })), ankaufspreis: 0, marktAvg: 0 });
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-6 overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-[18px] font-medium text-foreground">Kalkulation</h1>
