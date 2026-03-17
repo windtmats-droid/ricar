@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { FahrzeugDetailHeader } from "@/components/fahrzeug-detail/FahrzeugDetailHeader";
 import { Fotogalerie } from "@/components/fahrzeug-detail/Fotogalerie";
-import { FahrzeugDatenCard } from "@/components/fahrzeug-detail/FahrzeugDatenCard";
+import { FahrzeugDatenCard, type FahrzeugEditData } from "@/components/fahrzeug-detail/FahrzeugDatenCard";
 import { InseratstextDetailCard } from "@/components/fahrzeug-detail/InseratstextDetailCard";
 import { AusstattungCard } from "@/components/fahrzeug-detail/AusstattungCard";
 import { SchnellinfoCard } from "@/components/fahrzeug-detail/SchnellinfoCard";
@@ -13,6 +13,7 @@ import { VerlaufCard } from "@/components/fahrzeug-detail/VerlaufCard";
 import { DetailAktionenCard } from "@/components/fahrzeug-detail/DetailAktionenCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { toast as sonnerToast } from "sonner";
 
 const SAMPLE_FAHRZEUG = {
   id: "sample",
