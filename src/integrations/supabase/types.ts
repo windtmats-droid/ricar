@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      dokumente: {
+        Row: {
+          autohaus_id: string | null
+          bemerkungen: string | null
+          dok_nummer: string
+          erstellt_at: string
+          fahrzeug_id: string | null
+          gewaehrleistung: string | null
+          id: string
+          kaeufer_json: Json | null
+          lead_id: string | null
+          pdf_url: string | null
+          status: string
+          typ: string
+          uebergabedatum: string | null
+          verkaufspreis: number | null
+          zahlungsart: string | null
+        }
+        Insert: {
+          autohaus_id?: string | null
+          bemerkungen?: string | null
+          dok_nummer?: string
+          erstellt_at?: string
+          fahrzeug_id?: string | null
+          gewaehrleistung?: string | null
+          id?: string
+          kaeufer_json?: Json | null
+          lead_id?: string | null
+          pdf_url?: string | null
+          status?: string
+          typ?: string
+          uebergabedatum?: string | null
+          verkaufspreis?: number | null
+          zahlungsart?: string | null
+        }
+        Update: {
+          autohaus_id?: string | null
+          bemerkungen?: string | null
+          dok_nummer?: string
+          erstellt_at?: string
+          fahrzeug_id?: string | null
+          gewaehrleistung?: string | null
+          id?: string
+          kaeufer_json?: Json | null
+          lead_id?: string | null
+          pdf_url?: string | null
+          status?: string
+          typ?: string
+          uebergabedatum?: string | null
+          verkaufspreis?: number | null
+          zahlungsart?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dokumente_fahrzeug_id_fkey"
+            columns: ["fahrzeug_id"]
+            isOneToOne: false
+            referencedRelation: "fahrzeuge"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dokumente_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       einstellungen: {
         Row: {
           autohaus_id: string | null
