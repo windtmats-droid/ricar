@@ -200,6 +200,139 @@ export type Database = {
           },
         ]
       }
+      marktscans: {
+        Row: {
+          anzahl_angebote: number | null
+          durchschnittspreis: number | null
+          ergebnis_json: Json | null
+          erstellt_at: string
+          fahrzeug_id: string | null
+          id: string
+          max_preis: number | null
+          min_preis: number | null
+          quellen_json: Json | null
+          scan_typ: string
+        }
+        Insert: {
+          anzahl_angebote?: number | null
+          durchschnittspreis?: number | null
+          ergebnis_json?: Json | null
+          erstellt_at?: string
+          fahrzeug_id?: string | null
+          id?: string
+          max_preis?: number | null
+          min_preis?: number | null
+          quellen_json?: Json | null
+          scan_typ?: string
+        }
+        Update: {
+          anzahl_angebote?: number | null
+          durchschnittspreis?: number | null
+          ergebnis_json?: Json | null
+          erstellt_at?: string
+          fahrzeug_id?: string | null
+          id?: string
+          max_preis?: number | null
+          min_preis?: number | null
+          quellen_json?: Json | null
+          scan_typ?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marktscans_fahrzeug_id_fkey"
+            columns: ["fahrzeug_id"]
+            isOneToOne: false
+            referencedRelation: "fahrzeuge"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      preisalarme: {
+        Row: {
+          differenz: number
+          eigener_preis: number
+          empfehlung: string | null
+          erstellt_at: string
+          fahrzeug_id: string | null
+          id: string
+          marktpreis: number
+          status: string
+        }
+        Insert: {
+          differenz: number
+          eigener_preis: number
+          empfehlung?: string | null
+          erstellt_at?: string
+          fahrzeug_id?: string | null
+          id?: string
+          marktpreis: number
+          status?: string
+        }
+        Update: {
+          differenz?: number
+          eigener_preis?: number
+          empfehlung?: string | null
+          erstellt_at?: string
+          fahrzeug_id?: string | null
+          id?: string
+          marktpreis?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "preisalarme_fahrzeug_id_fkey"
+            columns: ["fahrzeug_id"]
+            isOneToOne: false
+            referencedRelation: "fahrzeuge"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suchprofile: {
+        Row: {
+          autohaus_id: string | null
+          bj_bis: number | null
+          bj_von: number | null
+          fahrzeugklasse: string | null
+          id: string
+          km_bis: number | null
+          km_von: number | null
+          name: string
+          plz: string | null
+          preis_bis: number | null
+          preis_von: number | null
+          radius_km: number | null
+        }
+        Insert: {
+          autohaus_id?: string | null
+          bj_bis?: number | null
+          bj_von?: number | null
+          fahrzeugklasse?: string | null
+          id?: string
+          km_bis?: number | null
+          km_von?: number | null
+          name: string
+          plz?: string | null
+          preis_bis?: number | null
+          preis_von?: number | null
+          radius_km?: number | null
+        }
+        Update: {
+          autohaus_id?: string | null
+          bj_bis?: number | null
+          bj_von?: number | null
+          fahrzeugklasse?: string | null
+          id?: string
+          km_bis?: number | null
+          km_von?: number | null
+          name?: string
+          plz?: string | null
+          preis_bis?: number | null
+          preis_von?: number | null
+          radius_km?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
