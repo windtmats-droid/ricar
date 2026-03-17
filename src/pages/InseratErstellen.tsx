@@ -174,6 +174,15 @@ const InseratErstellen = () => {
             <InseratstextCard
               beschreibung={form.beschreibung}
               onChange={(v) => updateField("beschreibung", v)}
+              fahrzeugDaten={{
+                marke: form.marke,
+                modell: form.modell,
+                baujahr: form.baujahr,
+                km: form.km,
+                kraftstoff: form.kraftstoff,
+                getriebe: form.getriebe,
+                preis: form.preis,
+              }}
             />
           </div>
 
