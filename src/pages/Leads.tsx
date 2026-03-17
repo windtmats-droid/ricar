@@ -161,6 +161,8 @@ const Leads = () => {
         />
       )}
 
+      <LeadsKiDetailModal open={showKiModal} onClose={() => setShowKiModal(false)} leads={priorityLeads} />
+
       <LeadHinzufuegenModal
         open={showAddModal}
         onClose={() => setShowAddModal(false)}
