@@ -21,6 +21,7 @@ const Leads = () => {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [selectedLead, setSelectedLead] = useState<LeadRow | null>(null);
   const [page, setPage] = useState(1);
+  const [showAddModal, setShowAddModal] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
