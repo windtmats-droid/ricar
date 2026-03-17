@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 interface LeadsHeaderProps {
   viewMode: "list" | "kanban";
   onViewModeChange: (mode: "list" | "kanban") => void;
+  onAddLead: () => void;
 }
 
 export function LeadsHeader({ viewMode, onViewModeChange }: LeadsHeaderProps) {
