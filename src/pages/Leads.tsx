@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { LeadsHeader } from "@/components/leads/LeadsHeader";
@@ -26,6 +26,7 @@ const Leads = () => {
   const [showKiModal, setShowKiModal] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const panelRef = useRef<HTMLDivElement>(null);
 
   const { data: dbLeads = [] } = useQuery({
     queryKey: ["leads"],
@@ -76,7 +77,6 @@ const Leads = () => {
 
   const statusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      // Only update if it's a real UUID
       if (id.match(/^[0-9a-f]{8}-/)) {
         const { error } = await supabase.from("leads").update({ status, letzte_aktivitaet_at: new Date().toISOString() }).eq("id", id);
         if (error) throw error;
@@ -90,7 +90,6 @@ const Leads = () => {
 
   const handleStatusChange = (id: string, status: string) => {
     statusMutation.mutate({ id, status });
-    // Optimistic update for sample data
     if (selectedLead?.id === id) {
       setSelectedLead({ ...selectedLead, status });
     }
@@ -105,61 +104,79 @@ const Leads = () => {
         queryClient.invalidateQueries({ queryKey: ["leads"] });
       });
     }
-    // Optimistic update
     if (selectedLead?.id === id) {
       setSelectedLead({ ...selectedLead, notizen: [...selectedLead.notizen, newNote] });
     }
     toast({ title: "Notiz gespeichert" });
   };
 
+  // Close panel on click outside
+  useEffect(() => {
+    if (!selectedLead) return;
+    const handler = (e: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        setSelectedLead(null);
+      }
+    };
+    // Delay to avoid immediate close from the row click that opened the panel
+    const timer = setTimeout(() => document.addEventListener("mousedown", handler), 50);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("mousedown", handler);
+    };
+  }, [selectedLead]);
+
   const priorityLeads = leads.filter((l) => l.prioritaet === "Hoch").slice(0, 3);
 
   return (
     <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
-      <main className="flex-1 p-6 overflow-y-auto">
-        <LeadsHeader viewMode={viewMode} onViewModeChange={setViewMode} onAddLead={() => setShowAddModal(true)} />
-        <LeadsKiBanner priorityNames={priorityLeads.map((l) => l.sender_name)} onShowDetails={() => setShowKiModal(true)} />
-        <LeadsFilterBar filters={filters} setFilters={(f) => { setFilters(f); setPage(1); }} resultCount={filtered.length} />
+      <div className="flex-1 flex overflow-hidden">
+        <main className="flex-1 p-6 overflow-y-auto min-w-0">
+          <LeadsHeader viewMode={viewMode} onViewModeChange={setViewMode} onAddLead={() => setShowAddModal(true)} />
+          <LeadsKiBanner priorityNames={priorityLeads.map((l) => l.sender_name)} onShowDetails={() => setShowKiModal(true)} />
+          <LeadsFilterBar filters={filters} setFilters={(f) => { setFilters(f); setPage(1); }} resultCount={filtered.length} />
 
-        {viewMode === "list" ? (
-          <>
-            <LeadsTable
-              rows={paginated}
-              selectedIds={selectedIds}
-              allSelected={paginated.length > 0 && paginated.every((r) => selectedIds.has(r.id))}
-              onToggleSelect={(id) => {
-                setSelectedIds((prev) => {
-                  const next = new Set(prev);
-                  next.has(id) ? next.delete(id) : next.add(id);
-                  return next;
-                });
-              }}
-              onToggleAll={(checked) => setSelectedIds(checked ? new Set(paginated.map((r) => r.id)) : new Set())}
-              onOpenDetail={setSelectedLead}
-              onStatusChange={handleStatusChange}
-            />
-            <FahrzeugePagination
-              page={page}
-              totalPages={totalPages}
-              totalCount={filtered.length}
-              pageSize={PAGE_SIZE}
-              onPageChange={setPage}
-            />
-          </>
-        ) : (
-          <LeadsKanban leads={filtered} onOpenDetail={setSelectedLead} />
+          {viewMode === "list" ? (
+            <>
+              <LeadsTable
+                rows={paginated}
+                selectedIds={selectedIds}
+                allSelected={paginated.length > 0 && paginated.every((r) => selectedIds.has(r.id))}
+                onToggleSelect={(id) => {
+                  setSelectedIds((prev) => {
+                    const next = new Set(prev);
+                    next.has(id) ? next.delete(id) : next.add(id);
+                    return next;
+                  });
+                }}
+                onToggleAll={(checked) => setSelectedIds(checked ? new Set(paginated.map((r) => r.id)) : new Set())}
+                onOpenDetail={setSelectedLead}
+                onStatusChange={handleStatusChange}
+              />
+              <FahrzeugePagination
+                page={page}
+                totalPages={totalPages}
+                totalCount={filtered.length}
+                pageSize={PAGE_SIZE}
+                onPageChange={setPage}
+              />
+            </>
+          ) : (
+            <LeadsKanban leads={filtered} onOpenDetail={setSelectedLead} />
+          )}
+        </main>
+
+        {selectedLead && (
+          <LeadDetailPanel
+            ref={panelRef}
+            lead={selectedLead}
+            onClose={() => setSelectedLead(null)}
+            onStatusChange={handleStatusChange}
+            onSaveNote={handleSaveNote}
+          />
         )}
-      </main>
-
-      {selectedLead && (
-        <LeadDetailPanel
-          lead={selectedLead}
-          onClose={() => setSelectedLead(null)}
-          onStatusChange={handleStatusChange}
-          onSaveNote={handleSaveNote}
-        />
-      )}
+      </div>
 
       <LeadsKiDetailModal open={showKiModal} onClose={() => setShowKiModal(false)} leads={priorityLeads} />
 
