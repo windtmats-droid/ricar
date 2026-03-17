@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { FahrzeugDetailHeader } from "@/components/fahrzeug-detail/FahrzeugDetailHeader";
 import { Fotogalerie } from "@/components/fahrzeug-detail/Fotogalerie";
-import { FahrzeugDatenCard } from "@/components/fahrzeug-detail/FahrzeugDatenCard";
+import { FahrzeugDatenCard, type FahrzeugEditData } from "@/components/fahrzeug-detail/FahrzeugDatenCard";
 import { InseratstextDetailCard } from "@/components/fahrzeug-detail/InseratstextDetailCard";
 import { AusstattungCard } from "@/components/fahrzeug-detail/AusstattungCard";
 import { SchnellinfoCard } from "@/components/fahrzeug-detail/SchnellinfoCard";
@@ -13,6 +13,7 @@ import { VerlaufCard } from "@/components/fahrzeug-detail/VerlaufCard";
 import { DetailAktionenCard } from "@/components/fahrzeug-detail/DetailAktionenCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { toast as sonnerToast } from "sonner";
 
 const SAMPLE_FAHRZEUG = {
   id: "sample",
@@ -54,6 +55,9 @@ const FahrzeugDetail = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState<FahrzeugEditData | null>(null);
+  const [editBeschreibung, setEditBeschreibung] = useState("");
 
   const isValidUuid = id ? /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id) : false;
 
@@ -145,6 +149,42 @@ const FahrzeugDetail = () => {
   const standzeit = Math.floor((Date.now() - new Date(f.created_at).getTime()) / 86400000);
   const ausstattung = (f as Record<string, unknown>).ausstattung_json as Record<string, string[]> | null;
 
+  const startEditing = () => {
+    setEditData({
+      marke: f.marke, modell: f.modell, baujahr: f.baujahr, km: f.km,
+      kraftstoff: f.kraftstoff, getriebe: f.getriebe, farbe: f.farbe,
+      tueren: f.tueren, preis: Number(f.preis), vin: f.vin, status: f.status,
+    });
+    setEditBeschreibung(f.beschreibung || "");
+    setIsEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+    setEditData(null);
+  };
+
+  const saveEditing = () => {
+    if (!editData) return;
+    const updates: Record<string, unknown> = {
+      marke: editData.marke, modell: editData.modell, baujahr: editData.baujahr,
+      km: editData.km, kraftstoff: editData.kraftstoff, getriebe: editData.getriebe,
+      farbe: editData.farbe, tueren: editData.tueren, preis: editData.preis,
+      vin: editData.vin, status: editData.status, beschreibung: editBeschreibung,
+    };
+    updateMutation.mutate(updates, {
+      onSuccess: () => {
+        sonnerToast.success("Fahrzeug erfolgreich aktualisiert");
+        setIsEditing(false);
+        setEditData(null);
+      },
+    });
+  };
+
+  const updateEditData = (partial: Partial<FahrzeugEditData>) => {
+    setEditData((prev) => prev ? { ...prev, ...partial } : prev);
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-screen w-full bg-background overflow-hidden">
@@ -170,17 +210,29 @@ const FahrzeugDetail = () => {
           baujahr={f.baujahr}
           status={f.status}
           id={id || "sample"}
+          isEditing={isEditing}
           onArchive={handleArchive}
+          onEdit={startEditing}
+          onSave={saveEditing}
+          onCancel={cancelEditing}
         />
 
         <div className="grid grid-cols-[1fr_380px] gap-5 mt-5">
-          {/* Left column */}
           <div className="space-y-4">
             <Fotogalerie photos={photoUrls} />
-            <FahrzeugDatenCard fahrzeug={f} standzeit={standzeit} />
+            <FahrzeugDatenCard
+              fahrzeug={f}
+              standzeit={standzeit}
+              isEditing={isEditing}
+              editData={editData || undefined}
+              onEditChange={updateEditData}
+            />
             <InseratstextDetailCard
               beschreibung={f.beschreibung}
               onSave={handleSaveBeschreibung}
+              isEditing={isEditing}
+              editBeschreibung={editBeschreibung}
+              onEditBeschreibungChange={setEditBeschreibung}
             />
             <AusstattungCard ausstattung={ausstattung} />
           </div>
