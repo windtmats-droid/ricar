@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +18,25 @@ interface Props {
 export function DokumentFormular({ data, update, updateKaeufer }: Props) {
   const [fahrzeuge, setFahrzeuge] = useState<Fahrzeug[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [geburtsdatumInput, setGeburtsdatumInput] = useState(data.kaeufer.geburtsdatum || "");
+  const [geburtsdatumError, setGeburtsdatumError] = useState(false);
+
+  // Sync external changes
+  useEffect(() => {
+    setGeburtsdatumInput(data.kaeufer.geburtsdatum || "");
+  }, [data.kaeufer.geburtsdatum]);
+
+  const handleGeburtsdatumBlur = useCallback(() => {
+    const val = geburtsdatumInput.trim();
+    if (!val) {
+      setGeburtsdatumError(false);
+      updateKaeufer({ geburtsdatum: "" });
+      return;
+    }
+    const valid = /^\d{2}\.\d{2}\.\d{4}$/.test(val);
+    setGeburtsdatumError(!valid);
+    if (valid) updateKaeufer({ geburtsdatum: val });
+  }, [geburtsdatumInput, updateKaeufer]);
 
   useEffect(() => {
     supabase.from("fahrzeuge").select("id, marke, modell, baujahr, preis").then(({ data: d }) => {
@@ -124,7 +143,17 @@ export function DokumentFormular({ data, update, updateKaeufer }: Props) {
           </div>
           <div className="mt-2">
             <Label className="text-[11px]">Geburtsdatum</Label>
-            <Input type="date" value={data.kaeufer.geburtsdatum} onChange={(e) => updateKaeufer({ geburtsdatum: e.target.value })} className="h-9 text-[13px]" />
+            <Input
+              type="text"
+              placeholder="TT.MM.JJJJ"
+              value={geburtsdatumInput}
+              onChange={(e) => { setGeburtsdatumInput(e.target.value); setGeburtsdatumError(false); }}
+              onBlur={handleGeburtsdatumBlur}
+              className={`h-9 text-[13px] ${geburtsdatumError ? "border-destructive focus-visible:ring-destructive" : ""}`}
+            />
+            {geburtsdatumError && (
+              <p className="text-[11px] text-destructive mt-1">Bitte im Format TT.MM.JJJJ eingeben</p>
+            )}
           </div>
         </div>
       </CardContent>
