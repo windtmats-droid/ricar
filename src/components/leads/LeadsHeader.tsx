@@ -7,7 +7,7 @@ interface LeadsHeaderProps {
   onAddLead: () => void;
 }
 
-export function LeadsHeader({ viewMode, onViewModeChange }: LeadsHeaderProps) {
+export function LeadsHeader({ viewMode, onViewModeChange, onAddLead }: LeadsHeaderProps) {
   return (
     <div className="flex items-start justify-between mb-5">
       <div>
