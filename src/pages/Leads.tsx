@@ -158,6 +158,12 @@ const Leads = () => {
           onSaveNote={handleSaveNote}
         />
       )}
+
+      <LeadHinzufuegenModal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onCreated={() => queryClient.invalidateQueries({ queryKey: ["leads"] })}
+      />
     </div>
   );
 };

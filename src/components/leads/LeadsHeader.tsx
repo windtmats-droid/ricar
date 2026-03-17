@@ -33,7 +33,7 @@ export function LeadsHeader({ viewMode, onViewModeChange, onAddLead }: LeadsHead
             Kanban
           </button>
         </div>
-        <Button size="sm" className="gap-1.5 text-[13px]">
+        <Button size="sm" className="gap-1.5 text-[13px]" onClick={onAddLead}>
           <Plus className="w-4 h-4" />
           Lead hinzufügen
         </Button>
