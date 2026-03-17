@@ -23,6 +23,7 @@ const Leads = () => {
   const [selectedLead, setSelectedLead] = useState<LeadRow | null>(null);
   const [page, setPage] = useState(1);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showKiModal, setShowKiModal] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
