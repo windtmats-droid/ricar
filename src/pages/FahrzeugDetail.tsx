@@ -149,6 +149,42 @@ const FahrzeugDetail = () => {
   const standzeit = Math.floor((Date.now() - new Date(f.created_at).getTime()) / 86400000);
   const ausstattung = (f as Record<string, unknown>).ausstattung_json as Record<string, string[]> | null;
 
+  const startEditing = () => {
+    setEditData({
+      marke: f.marke, modell: f.modell, baujahr: f.baujahr, km: f.km,
+      kraftstoff: f.kraftstoff, getriebe: f.getriebe, farbe: f.farbe,
+      tueren: f.tueren, preis: Number(f.preis), vin: f.vin, status: f.status,
+    });
+    setEditBeschreibung(f.beschreibung || "");
+    setIsEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+    setEditData(null);
+  };
+
+  const saveEditing = () => {
+    if (!editData) return;
+    const updates: Record<string, unknown> = {
+      marke: editData.marke, modell: editData.modell, baujahr: editData.baujahr,
+      km: editData.km, kraftstoff: editData.kraftstoff, getriebe: editData.getriebe,
+      farbe: editData.farbe, tueren: editData.tueren, preis: editData.preis,
+      vin: editData.vin, status: editData.status, beschreibung: editBeschreibung,
+    };
+    updateMutation.mutate(updates, {
+      onSuccess: () => {
+        sonnerToast.success("Fahrzeug erfolgreich aktualisiert");
+        setIsEditing(false);
+        setEditData(null);
+      },
+    });
+  };
+
+  const updateEditData = (partial: Partial<FahrzeugEditData>) => {
+    setEditData((prev) => prev ? { ...prev, ...partial } : prev);
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-screen w-full bg-background overflow-hidden">
