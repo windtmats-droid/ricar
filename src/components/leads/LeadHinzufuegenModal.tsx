@@ -45,7 +45,7 @@ export function LeadHinzufuegenModal({ open, onClose, onCreated }: Props) {
 
   const handleSave = async () => {
     if (!vorname.trim() || !nachname.trim()) { toast.error("Vor- und Nachname sind erforderlich"); return; }
-    if (!fahrzeugId) { toast.error("Bitte ein Fahrzeug auswählen"); return; }
+    if (!fahrzeugId) { toast.error("Bitte ein Inserat auswählen"); return; }
 
     setSaving(true);
     const { error } = await supabase.from("leads").insert({
