@@ -8,6 +8,7 @@ import { LeadsTable } from "@/components/leads/LeadsTable";
 import { LeadsKanban } from "@/components/leads/LeadsKanban";
 import { LeadDetailPanel } from "@/components/leads/LeadDetailPanel";
 import { LeadHinzufuegenModal } from "@/components/leads/LeadHinzufuegenModal";
+import { LeadsKiDetailModal } from "@/components/leads/LeadsKiDetailModal";
 import { FahrzeugePagination } from "@/components/fahrzeuge/FahrzeugePagination";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -22,6 +23,7 @@ const Leads = () => {
   const [selectedLead, setSelectedLead] = useState<LeadRow | null>(null);
   const [page, setPage] = useState(1);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showKiModal, setShowKiModal] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -117,7 +119,7 @@ const Leads = () => {
       <DashboardSidebar />
       <main className="flex-1 p-6 overflow-y-auto">
         <LeadsHeader viewMode={viewMode} onViewModeChange={setViewMode} onAddLead={() => setShowAddModal(true)} />
-        <LeadsKiBanner priorityNames={priorityLeads.map((l) => l.sender_name)} />
+        <LeadsKiBanner priorityNames={priorityLeads.map((l) => l.sender_name)} onShowDetails={() => setShowKiModal(true)} />
         <LeadsFilterBar filters={filters} setFilters={(f) => { setFilters(f); setPage(1); }} resultCount={filtered.length} />
 
         {viewMode === "list" ? (
@@ -158,6 +160,8 @@ const Leads = () => {
           onSaveNote={handleSaveNote}
         />
       )}
+
+      <LeadsKiDetailModal open={showKiModal} onClose={() => setShowKiModal(false)} leads={priorityLeads} />
 
       <LeadHinzufuegenModal
         open={showAddModal}

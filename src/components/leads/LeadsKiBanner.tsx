@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 
 interface LeadsKiBannerProps {
   priorityNames: string[];
+  onShowDetails: () => void;
 }
 
-export function LeadsKiBanner({ priorityNames }: LeadsKiBannerProps) {
+export function LeadsKiBanner({ priorityNames, onShowDetails }: LeadsKiBannerProps) {
   return (
     <div className="mb-4 rounded-[10px] px-[18px] py-[14px] flex items-center justify-between gap-4"
       style={{ background: "linear-gradient(135deg, hsl(211, 72%, 37%) 0%, hsl(211, 60%, 50%) 100%)" }}>
@@ -26,7 +27,7 @@ export function LeadsKiBanner({ priorityNames }: LeadsKiBannerProps) {
             {name}
           </span>
         ))}
-        <Button variant="outline" size="sm" className="ml-2 border-white/40 text-white bg-transparent hover:bg-white/10 text-[12px] h-8">
+        <Button variant="outline" size="sm" onClick={onShowDetails} className="ml-2 border-white/40 text-white bg-transparent hover:bg-white/10 text-[12px] h-8">
           Details anzeigen
         </Button>
         <span className="ml-1 px-2 py-0.5 rounded-full bg-white text-primary text-[10px] font-semibold">KI</span>
