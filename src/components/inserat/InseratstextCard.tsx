@@ -20,26 +20,20 @@ interface Props {
   getFormData?: () => FahrzeugDaten;
 }
 
-const WEBHOOK_URL = "http://91.99.97.102:5678/webhook/5e77672c-77e2-4941-8b13-436cefbf51a6";
-
 export function InseratstextCard({ beschreibung, onChange, getFormData }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
     if (!getFormData) return;
     const daten = getFormData();
-    console.log("Sending to webhook:", JSON.stringify(daten, null, 2));
+    console.log("Sending to edge function:", JSON.stringify(daten, null, 2));
     setLoading(true);
     try {
-      const res = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(daten),
+      const { data, error } = await supabase.functions.invoke("generate-description", {
+        body: daten,
       });
-      console.log("Response status:", res.status);
-      const raw = await res.text();
-      console.log("Raw response body:", raw);
-      const data = JSON.parse(raw);
+      console.log("Edge function response:", data);
+      if (error) throw error;
       const text = data?.content?.[0]?.text;
       if (text) {
         onChange(text);
