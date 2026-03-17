@@ -12,8 +12,8 @@ export function StandzeitChart() {
   return (
     <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-medium text-foreground">Standzeit nach Fahrzeug</h3>
-        <button className="text-xs text-primary hover:underline">Alle Fahrzeuge</button>
+        <h3 className="text-sm font-medium text-foreground">Standzeit nach Inserat</h3>
+        <button className="text-xs text-primary hover:underline">Alle Inserate</button>
       </div>
       <div className="space-y-3 flex-1">
         {vehicles.map((v) => (
