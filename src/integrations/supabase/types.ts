@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       fahrzeuge: {
         Row: {
+          ausstattung_json: Json | null
           autohaus_id: string | null
           baujahr: number | null
           beschreibung: string | null
@@ -35,6 +36,7 @@ export type Database = {
           vin: string | null
         }
         Insert: {
+          ausstattung_json?: Json | null
           autohaus_id?: string | null
           baujahr?: number | null
           beschreibung?: string | null
@@ -54,6 +56,7 @@ export type Database = {
           vin?: string | null
         }
         Update: {
+          ausstattung_json?: Json | null
           autohaus_id?: string | null
           baujahr?: number | null
           beschreibung?: string | null
@@ -99,6 +102,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "fotos_fahrzeug_id_fkey"
+            columns: ["fahrzeug_id"]
+            isOneToOne: false
+            referencedRelation: "fahrzeuge"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ki_aktionen: {
+        Row: {
+          aktion_typ: string
+          beschreibung: string
+          created_at: string
+          details: Json | null
+          fahrzeug_id: string | null
+          id: string
+        }
+        Insert: {
+          aktion_typ: string
+          beschreibung: string
+          created_at?: string
+          details?: Json | null
+          fahrzeug_id?: string | null
+          id?: string
+        }
+        Update: {
+          aktion_typ?: string
+          beschreibung?: string
+          created_at?: string
+          details?: Json | null
+          fahrzeug_id?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ki_aktionen_fahrzeug_id_fkey"
             columns: ["fahrzeug_id"]
             isOneToOne: false
             referencedRelation: "fahrzeuge"
