@@ -8,6 +8,7 @@ import {
   Calculator,
   FileText,
   Zap,
+  Inbox,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -17,6 +18,17 @@ const navSections = [
     label: "Hauptmenü",
     items: [
       { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+    ],
+  },
+  {
+    label: "KI-Funktionen",
+    items: [
+      { icon: Inbox, label: "Postfach", path: "/postfach", badge: "12", badgeColor: "bg-primary/10 text-primary" },
+    ],
+  },
+  {
+    label: "Fahrzeuge",
+    items: [
       { icon: Car, label: "Fahrzeuge", path: "/fahrzeuge", badge: "34", badgeColor: "bg-primary/10 text-primary" },
       { icon: PlusSquare, label: "Inserat erstellen", path: "/inserate/neu" },
       { icon: Users, label: "Leads & CRM", path: "/leads", badge: "7", badgeColor: "bg-warning/15 text-warning" },
