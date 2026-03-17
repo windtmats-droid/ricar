@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 interface LeadsHeaderProps {
   viewMode: "list" | "kanban";
   onViewModeChange: (mode: "list" | "kanban") => void;
+  onAddLead: () => void;
 }
 
-export function LeadsHeader({ viewMode, onViewModeChange }: LeadsHeaderProps) {
+export function LeadsHeader({ viewMode, onViewModeChange, onAddLead }: LeadsHeaderProps) {
   return (
     <div className="flex items-start justify-between mb-5">
       <div>
@@ -32,7 +33,7 @@ export function LeadsHeader({ viewMode, onViewModeChange }: LeadsHeaderProps) {
             Kanban
           </button>
         </div>
-        <Button size="sm" className="gap-1.5 text-[13px]">
+        <Button size="sm" className="gap-1.5 text-[13px]" onClick={onAddLead}>
           <Plus className="w-4 h-4" />
           Lead hinzufügen
         </Button>
