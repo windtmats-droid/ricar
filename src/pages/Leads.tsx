@@ -116,7 +116,7 @@ const Leads = () => {
     <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
       <main className="flex-1 p-6 overflow-y-auto">
-        <LeadsHeader viewMode={viewMode} onViewModeChange={setViewMode} />
+        <LeadsHeader viewMode={viewMode} onViewModeChange={setViewMode} onAddLead={() => setShowAddModal(true)} />
         <LeadsKiBanner priorityNames={priorityLeads.map((l) => l.sender_name)} />
         <LeadsFilterBar filters={filters} setFilters={(f) => { setFilters(f); setPage(1); }} resultCount={filtered.length} />
 
