@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Pencil, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,17 +7,41 @@ import { Textarea } from "@/components/ui/textarea";
 interface Props {
   beschreibung: string | null;
   onSave: (text: string) => void;
+  isEditing?: boolean;
+  editBeschreibung?: string;
+  onEditBeschreibungChange?: (text: string) => void;
 }
 
-export function InseratstextDetailCard({ beschreibung, onSave }: Props) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(beschreibung || "");
+export function InseratstextDetailCard({ beschreibung, onSave, isEditing, editBeschreibung, onEditBeschreibungChange }: Props) {
+  // Legacy standalone editing (when not in page-level edit mode)
+  const [localEditing, setLocalEditing] = useState(false);
+  const [localDraft, setLocalDraft] = useState(beschreibung || "");
 
-  const handleSave = () => {
-    onSave(draft);
-    setEditing(false);
+  const handleLocalSave = () => {
+    onSave(localDraft);
+    setLocalEditing(false);
   };
 
+  // Page-level edit mode
+  if (isEditing && onEditBeschreibungChange !== undefined) {
+    return (
+      <div className="bg-card border border-border rounded-xl p-5">
+        <div className="flex items-center gap-2 mb-3">
+          <h3 className="text-sm font-medium text-foreground">Inseratstext</h3>
+          <Badge variant="info" className="text-[9px] px-1.5 py-0">KI</Badge>
+        </div>
+        <Textarea
+          rows={6}
+          value={editBeschreibung ?? ""}
+          onChange={(e) => onEditBeschreibungChange(e.target.value)}
+          className="resize-none text-sm"
+          placeholder="Inseratstext eingeben..."
+        />
+      </div>
+    );
+  }
+
+  // Read-only / local edit mode
   return (
     <div className="bg-card border border-border rounded-xl p-5">
       <div className="flex items-center justify-between mb-3">
@@ -25,31 +49,14 @@ export function InseratstextDetailCard({ beschreibung, onSave }: Props) {
           <h3 className="text-sm font-medium text-foreground">Inseratstext</h3>
           <Badge variant="info" className="text-[9px] px-1.5 py-0">KI</Badge>
         </div>
-        {!editing && beschreibung && (
-          <button
-            onClick={() => { setDraft(beschreibung || ""); setEditing(true); }}
-            className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Pencil className="w-3.5 h-3.5" />
-          </button>
-        )}
       </div>
 
-      {editing ? (
+      {localEditing ? (
         <div>
-          <Textarea
-            rows={6}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            className="resize-none text-sm"
-          />
+          <Textarea rows={6} value={localDraft} onChange={(e) => setLocalDraft(e.target.value)} className="resize-none text-sm" />
           <div className="flex gap-2 mt-3 justify-end">
-            <Button variant="outline" size="sm" className="text-xs" onClick={() => setEditing(false)}>
-              Abbrechen
-            </Button>
-            <Button size="sm" className="text-xs" onClick={handleSave}>
-              Speichern
-            </Button>
+            <Button variant="outline" size="sm" className="text-xs" onClick={() => setLocalEditing(false)}>Abbrechen</Button>
+            <Button size="sm" className="text-xs" onClick={handleLocalSave}>Speichern</Button>
           </div>
         </div>
       ) : beschreibung ? (

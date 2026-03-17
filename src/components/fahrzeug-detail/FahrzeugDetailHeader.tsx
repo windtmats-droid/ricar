@@ -1,17 +1,10 @@
-import { ArrowLeft, Pencil, Archive } from "lucide-react";
+import { ArrowLeft, Pencil, Archive, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 const statusConfig: Record<string, { bg: string; text: string }> = {
@@ -26,10 +19,14 @@ interface Props {
   baujahr: number | null;
   status: string;
   id: string;
+  isEditing: boolean;
   onArchive: () => void;
+  onEdit: () => void;
+  onSave: () => void;
+  onCancel: () => void;
 }
 
-export function FahrzeugDetailHeader({ marke, modell, baujahr, status, id, onArchive }: Props) {
+export function FahrzeugDetailHeader({ marke, modell, baujahr, status, id, isEditing, onArchive, onEdit, onSave, onCancel }: Props) {
   const navigate = useNavigate();
   const sc = statusConfig[status] || statusConfig.Entwurf;
 
@@ -51,37 +48,39 @@ export function FahrzeugDetailHeader({ marke, modell, baujahr, status, id, onArc
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-xs gap-1.5"
-            onClick={() => navigate(`/fahrzeuge/${id}/bearbeiten`)}
-          >
-            <Pencil className="w-3.5 h-3.5" /> Bearbeiten
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs gap-1.5 border-destructive/40 text-destructive hover:bg-destructive/10"
-              >
-                <Archive className="w-3.5 h-3.5" /> Archivieren
+          {isEditing ? (
+            <>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={onCancel}>
+                <X className="w-3.5 h-3.5" /> Abbrechen
               </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Fahrzeug archivieren?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {marke} {modell} wird als archiviert markiert.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                <AlertDialogAction onClick={onArchive}>Archivieren</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+              <Button size="sm" className="text-xs gap-1.5" onClick={onSave}>
+                <Save className="w-3.5 h-3.5" /> Änderungen speichern
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={onEdit}>
+                <Pencil className="w-3.5 h-3.5" /> Bearbeiten
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="text-xs gap-1.5 border-destructive/40 text-destructive hover:bg-destructive/10">
+                    <Archive className="w-3.5 h-3.5" /> Archivieren
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Fahrzeug archivieren?</AlertDialogTitle>
+                    <AlertDialogDescription>{marke} {modell} wird als archiviert markiert.</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                    <AlertDialogAction onClick={onArchive}>Archivieren</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
         </div>
       </div>
     </div>
