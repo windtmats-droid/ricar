@@ -9,6 +9,7 @@ import {
   FileText,
   Zap,
   Inbox,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -46,6 +47,7 @@ const navSections = [
     items: [
       { icon: Calculator, label: "Kalkulation", path: "/kalkulation" },
       { icon: FileText, label: "Dokumente", path: "/dokumente" },
+      { icon: Settings, label: "Einstellungen", path: "/einstellungen" },
     ],
   },
 ];

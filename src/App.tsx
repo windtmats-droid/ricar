@@ -11,6 +11,7 @@ import FahrzeugDetail from "./pages/FahrzeugDetail.tsx";
 import Postfach from "./pages/Postfach.tsx";
 import Leads from "./pages/Leads.tsx";
 import MarktScan from "./pages/MarktScan.tsx";
+import Einstellungen from "./pages/Einstellungen.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/postfach" element={<Postfach />} />
           <Route path="/leads" element={<Leads />} />
           <Route path="/markt-scan" element={<MarktScan />} />
+          <Route path="/einstellungen" element={<Einstellungen />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

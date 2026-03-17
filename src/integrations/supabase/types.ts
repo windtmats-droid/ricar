@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      einstellungen: {
+        Row: {
+          autohaus_id: string | null
+          autoscout_api_key: string | null
+          autoscout_partner_id: string | null
+          benachrichtigungen_json: Json | null
+          created_at: string
+          id: string
+          mobilede_kundennr: string | null
+          mobilede_pw_encrypted: string | null
+          mobilede_user: string | null
+          n8n_webhook_url: string | null
+          profil_json: Json | null
+          scan_config_json: Json | null
+          updated_at: string
+        }
+        Insert: {
+          autohaus_id?: string | null
+          autoscout_api_key?: string | null
+          autoscout_partner_id?: string | null
+          benachrichtigungen_json?: Json | null
+          created_at?: string
+          id?: string
+          mobilede_kundennr?: string | null
+          mobilede_pw_encrypted?: string | null
+          mobilede_user?: string | null
+          n8n_webhook_url?: string | null
+          profil_json?: Json | null
+          scan_config_json?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          autohaus_id?: string | null
+          autoscout_api_key?: string | null
+          autoscout_partner_id?: string | null
+          benachrichtigungen_json?: Json | null
+          created_at?: string
+          id?: string
+          mobilede_kundennr?: string | null
+          mobilede_pw_encrypted?: string | null
+          mobilede_user?: string | null
+          n8n_webhook_url?: string | null
+          profil_json?: Json | null
+          scan_config_json?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       fahrzeuge: {
         Row: {
           ausstattung_json: Json | null
