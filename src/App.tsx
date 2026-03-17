@@ -7,6 +7,7 @@ import Index from "./pages/Index.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import InseratErstellen from "./pages/InseratErstellen.tsx";
 import Fahrzeuge from "./pages/Fahrzeuge.tsx";
+import FahrzeugDetail from "./pages/FahrzeugDetail.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
