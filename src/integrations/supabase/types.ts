@@ -144,6 +144,62 @@ export type Database = {
           },
         ]
       }
+      leads: {
+        Row: {
+          anfrage_id: string | null
+          erstellt_at: string
+          fahrzeug_id: string | null
+          id: string
+          ki_zusammenfassung: string | null
+          letzte_aktivitaet_at: string
+          notizen: Json | null
+          prioritaet: string
+          quelle: string
+          sender_email: string | null
+          sender_name: string
+          sender_phone: string | null
+          status: string
+        }
+        Insert: {
+          anfrage_id?: string | null
+          erstellt_at?: string
+          fahrzeug_id?: string | null
+          id?: string
+          ki_zusammenfassung?: string | null
+          letzte_aktivitaet_at?: string
+          notizen?: Json | null
+          prioritaet?: string
+          quelle?: string
+          sender_email?: string | null
+          sender_name: string
+          sender_phone?: string | null
+          status?: string
+        }
+        Update: {
+          anfrage_id?: string | null
+          erstellt_at?: string
+          fahrzeug_id?: string | null
+          id?: string
+          ki_zusammenfassung?: string | null
+          letzte_aktivitaet_at?: string
+          notizen?: Json | null
+          prioritaet?: string
+          quelle?: string
+          sender_email?: string | null
+          sender_name?: string
+          sender_phone?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_fahrzeug_id_fkey"
+            columns: ["fahrzeug_id"]
+            isOneToOne: false
+            referencedRelation: "fahrzeuge"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
