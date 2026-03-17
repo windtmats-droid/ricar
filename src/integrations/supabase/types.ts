@@ -336,6 +336,36 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          autohaus_name: string | null
+          created_at: string
+          email: string | null
+          id: string
+          nachname: string | null
+          rolle: string
+          vorname: string | null
+        }
+        Insert: {
+          autohaus_name?: string | null
+          created_at?: string
+          email?: string | null
+          id: string
+          nachname?: string | null
+          rolle?: string
+          vorname?: string | null
+        }
+        Update: {
+          autohaus_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          nachname?: string | null
+          rolle?: string
+          vorname?: string | null
+        }
+        Relationships: []
+      }
       suchprofile: {
         Row: {
           autohaus_id: string | null
