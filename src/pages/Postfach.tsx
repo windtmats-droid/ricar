@@ -40,9 +40,9 @@ const Postfach = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
-      <div className="flex flex-1 min-h-screen overflow-hidden">
+      <div className="flex flex-1 h-full overflow-hidden">
         {/* Left panel */}
         <AnfragenListe
           anfragen={filtered}

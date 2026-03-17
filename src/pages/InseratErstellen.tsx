@@ -150,9 +150,9 @@ const InseratErstellen = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-6 overflow-y-auto">
         {/* Top bar */}
         <div className="mb-6">
           <h1 className="text-lg font-medium text-foreground">Inserat erstellen</h1>

@@ -34,9 +34,9 @@ const MarktScan = () => {
   const fahrzeuge = dbFahrzeuge.length > 0 ? dbFahrzeuge : SAMPLE_FAHRZEUGE;
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-6 overflow-y-auto">
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
