@@ -10,9 +10,12 @@ import {
   Zap,
   Inbox,
   Settings,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { Badge } from "@/components/ui/badge";
 
 const navSections = [
   {
@@ -54,6 +57,17 @@ const navSections = [
 
 export function DashboardSidebar() {
   const location = useLocation();
+  const { profile, signOut } = useAuth();
+
+  const displayName = profile
+    ? `${profile.vorname || ""} ${profile.nachname || ""}`.trim() || profile.email || "Benutzer"
+    : "Benutzer";
+
+  const initials = profile
+    ? `${(profile.vorname || "")[0] || ""}${(profile.nachname || "")[0] || ""}`.toUpperCase() || "U"
+    : "U";
+
+  const rolleLabel = profile?.rolle === "chef" ? "Chef" : "Verkäufer";
 
   return (
     <aside className="w-[210px] min-h-screen bg-card border-r border-border flex flex-col shrink-0">
@@ -102,14 +116,23 @@ export function DashboardSidebar() {
       </nav>
 
       {/* User Profile */}
-      <div className="px-4 py-4 border-t border-border flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-semibold">
-          TM
+      <div className="px-4 py-4 border-t border-border">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-semibold">
+            {initials}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="text-[12px] font-medium text-foreground truncate">{displayName}</div>
+            <div className="text-[10px] text-muted-foreground">{rolleLabel}</div>
+          </div>
         </div>
-        <div className="min-w-0">
-          <div className="text-[12px] font-medium text-foreground truncate">Thomas Müller</div>
-          <div className="text-[10px] text-muted-foreground">Verkäufer</div>
-        </div>
+        <button
+          onClick={signOut}
+          className="mt-2.5 w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[12px] text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          Abmelden
+        </button>
       </div>
     </aside>
   );
