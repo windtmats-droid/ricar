@@ -75,7 +75,7 @@ const FahrzeugDetail = () => {
   const { data: fotos = [] } = useQuery({
     queryKey: ["fahrzeug-fotos", id],
     queryFn: async () => {
-      if (!id) return [];
+      if (!id || !isValidUuid) return [];
       const { data, error } = await supabase
         .from("fotos")
         .select("*")
@@ -84,7 +84,7 @@ const FahrzeugDetail = () => {
       if (error) throw error;
       return (data || []).map((f) => f.storage_url);
     },
-    enabled: !!id,
+    enabled: !!id && isValidUuid,
   });
 
   const { data: verlauf = [] } = useQuery({
