@@ -90,7 +90,7 @@ const FahrzeugDetail = () => {
   const { data: verlauf = [] } = useQuery({
     queryKey: ["ki-aktionen", id],
     queryFn: async () => {
-      if (!id) return [];
+      if (!id || !isValidUuid) return [];
       const { data, error } = await supabase
         .from("ki_aktionen")
         .select("beschreibung, created_at")
@@ -99,7 +99,7 @@ const FahrzeugDetail = () => {
       if (error) throw error;
       return data || [];
     },
-    enabled: !!id,
+    enabled: !!id && isValidUuid,
   });
 
   const updateMutation = useMutation({
