@@ -18,6 +18,25 @@ interface Props {
 export function DokumentFormular({ data, update, updateKaeufer }: Props) {
   const [fahrzeuge, setFahrzeuge] = useState<Fahrzeug[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [geburtsdatumInput, setGeburtsdatumInput] = useState(data.kaeufer.geburtsdatum || "");
+  const [geburtsdatumError, setGeburtsdatumError] = useState(false);
+
+  // Sync external changes
+  useEffect(() => {
+    setGeburtsdatumInput(data.kaeufer.geburtsdatum || "");
+  }, [data.kaeufer.geburtsdatum]);
+
+  const handleGeburtsdatumBlur = useCallback(() => {
+    const val = geburtsdatumInput.trim();
+    if (!val) {
+      setGeburtsdatumError(false);
+      updateKaeufer({ geburtsdatum: "" });
+      return;
+    }
+    const valid = /^\d{2}\.\d{2}\.\d{4}$/.test(val);
+    setGeburtsdatumError(!valid);
+    if (valid) updateKaeufer({ geburtsdatum: val });
+  }, [geburtsdatumInput, updateKaeufer]);
 
   useEffect(() => {
     supabase.from("fahrzeuge").select("id, marke, modell, baujahr, preis").then(({ data: d }) => {
