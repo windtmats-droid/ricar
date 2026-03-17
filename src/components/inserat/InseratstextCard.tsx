@@ -3,41 +3,37 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Loader2 } from "lucide-react";
 
+interface FahrzeugDaten {
+  marke: string;
+  modell: string;
+  baujahr: string;
+  km: string;
+  kraftstoff: string;
+  getriebe: string;
+  preis: string;
+}
+
 interface Props {
   beschreibung: string;
   onChange: (value: string) => void;
-  fahrzeugDaten?: {
-    marke: string;
-    modell: string;
-    baujahr: string;
-    km: string;
-    kraftstoff: string;
-    getriebe: string;
-    preis: string;
-  };
+  getFormData?: () => FahrzeugDaten;
 }
 
 const WEBHOOK_URL = "http://91.99.97.102:5678/webhook/5e77672c-77e2-4941-8b13-436cefbf51a6";
 
-export function InseratstextCard({ beschreibung, onChange, fahrzeugDaten }: Props) {
+export function InseratstextCard({ beschreibung, onChange, getFormData }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
-    if (!fahrzeugDaten) return;
+    if (!getFormData) return;
+    const daten = getFormData();
+    console.log("KI-Request Daten:", daten);
     setLoading(true);
     try {
       const res = await fetch(WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          marke: fahrzeugDaten.marke,
-          modell: fahrzeugDaten.modell,
-          baujahr: fahrzeugDaten.baujahr,
-          km: fahrzeugDaten.km,
-          kraftstoff: fahrzeugDaten.kraftstoff,
-          getriebe: fahrzeugDaten.getriebe,
-          preis: fahrzeugDaten.preis,
-        }),
+        body: JSON.stringify(daten),
       });
       const data = await res.json();
       const text = data?.content?.[0]?.text;
