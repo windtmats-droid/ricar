@@ -55,10 +55,12 @@ const FahrzeugDetail = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  const isValidUuid = id ? /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id) : false;
+
   const { data: fahrzeug, isLoading } = useQuery({
     queryKey: ["fahrzeug", id],
     queryFn: async () => {
-      if (!id) return null;
+      if (!id || !isValidUuid) return null;
       const { data, error } = await supabase
         .from("fahrzeuge")
         .select("*")
@@ -67,7 +69,7 @@ const FahrzeugDetail = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!id,
+    enabled: !!id && isValidUuid,
   });
 
   const { data: fotos = [] } = useQuery({
