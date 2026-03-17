@@ -70,7 +70,7 @@ export function DashboardSidebar() {
   const rolleLabel = profile?.rolle === "chef" ? "Chef" : "Verkäufer";
 
   return (
-    <aside className="w-[210px] min-h-screen bg-card border-r border-border flex flex-col shrink-0">
+    <aside className="w-[210px] h-screen bg-card border-r border-border flex flex-col shrink-0 overflow-y-auto">
       {/* Logo */}
       <div className="px-5 py-5 flex items-center gap-2.5">
         <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
