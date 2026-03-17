@@ -14,7 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      fahrzeuge: {
+        Row: {
+          autohaus_id: string | null
+          baujahr: number | null
+          beschreibung: string | null
+          created_at: string
+          created_by: string | null
+          farbe: string | null
+          getriebe: string | null
+          id: string
+          km: number | null
+          kraftstoff: string | null
+          marke: string
+          modell: string
+          preis: number
+          status: string
+          tueren: number | null
+          updated_at: string
+          vin: string | null
+        }
+        Insert: {
+          autohaus_id?: string | null
+          baujahr?: number | null
+          beschreibung?: string | null
+          created_at?: string
+          created_by?: string | null
+          farbe?: string | null
+          getriebe?: string | null
+          id?: string
+          km?: number | null
+          kraftstoff?: string | null
+          marke: string
+          modell: string
+          preis: number
+          status?: string
+          tueren?: number | null
+          updated_at?: string
+          vin?: string | null
+        }
+        Update: {
+          autohaus_id?: string | null
+          baujahr?: number | null
+          beschreibung?: string | null
+          created_at?: string
+          created_by?: string | null
+          farbe?: string | null
+          getriebe?: string | null
+          id?: string
+          km?: number | null
+          kraftstoff?: string | null
+          marke?: string
+          modell?: string
+          preis?: number
+          status?: string
+          tueren?: number | null
+          updated_at?: string
+          vin?: string | null
+        }
+        Relationships: []
+      }
+      fotos: {
+        Row: {
+          created_at: string
+          fahrzeug_id: string
+          id: string
+          reihenfolge: number
+          storage_url: string
+        }
+        Insert: {
+          created_at?: string
+          fahrzeug_id: string
+          id?: string
+          reihenfolge?: number
+          storage_url: string
+        }
+        Update: {
+          created_at?: string
+          fahrzeug_id?: string
+          id?: string
+          reihenfolge?: number
+          storage_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fotos_fahrzeug_id_fkey"
+            columns: ["fahrzeug_id"]
+            isOneToOne: false
+            referencedRelation: "fahrzeuge"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
