@@ -31,6 +31,12 @@ export interface Fahrzeug {
   inseratText: string;
   inseratPreis: number;
   verkaufsDatum: string;
+  verkaufspreis?: number;
+  kaeuferName?: string;
+  kaeuferTelefon?: string;
+  kaeuferEmail?: string;
+  zahlungsart?: string;
+  verkaufsNotizen?: string;
 }
 
 const STORAGE_KEY = "fahrzeuge";
