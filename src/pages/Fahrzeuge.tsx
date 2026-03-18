@@ -502,7 +502,6 @@ const Fahrzeuge = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {inserierte.map((f) => {
-                  const isc = inseratStatusConfig[f.status] || inseratStatusConfig.inseriert;
                   return (
                     <div key={f.id} className="bg-card border border-border rounded-xl overflow-hidden relative">
                       {/* Status badge top-right */}
