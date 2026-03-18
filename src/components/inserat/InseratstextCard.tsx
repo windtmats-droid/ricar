@@ -32,17 +32,24 @@ export function InseratstextCard({ beschreibung, onChange, getFormData }: Props)
       const { data, error } = await supabase.functions.invoke("generate-description", {
         body: daten,
       });
-      console.log("Edge function response:", data);
-      if (error) throw error;
+      console.log("Edge function raw response:", JSON.stringify(data));
+      if (error) {
+        alert("Edge Function Fehler: " + JSON.stringify(error));
+        throw error;
+      }
+      if (!data) {
+        alert("Keine Antwort von der Edge Function erhalten (data ist null/undefined)");
+        return;
+      }
       const text = data?.beschreibung;
       if (text) {
         onChange(text);
       } else {
-        alert("Keine Beschreibung in der Antwort gefunden. Siehe Konsole für Details.");
+        alert("Kein 'beschreibung' Feld in Antwort. Erhaltene Daten: " + JSON.stringify(data).substring(0, 500));
       }
     } catch (err) {
       console.error("KI-Beschreibung Fehler:", err);
-      alert("Fehler beim Generieren: " + (err instanceof Error ? err.message : String(err)));
+      alert("Fehler beim Generieren: " + (err instanceof Error ? err.message : JSON.stringify(err)));
     } finally {
       setLoading(false);
     }
