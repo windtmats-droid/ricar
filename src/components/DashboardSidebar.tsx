@@ -25,6 +25,12 @@ const navSections = [
     ],
   },
   {
+    label: "Künstliche Intelligenz",
+    items: [
+      { icon: Sparkles, label: "KI-Assistent", path: "/chat" },
+    ],
+  },
+  {
     label: "Fahrzeugverwaltung",
     items: [
       { icon: ShoppingCart, label: "Ankauf", path: "/ankauf" },
