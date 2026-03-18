@@ -41,7 +41,10 @@ const Fahrzeuge = () => {
   // Inserat panel state
   const [inseratOpen, setInseratOpen] = useState(false);
   const [inseratFahrzeug, setInseratFahrzeug] = useState<Fahrzeug | null>(null);
-  
+
+  // Verkauf modal state
+  const [verkaufOpen, setVerkaufOpen] = useState(false);
+  const [verkaufFahrzeug, setVerkaufFahrzeug] = useState<Fahrzeug | null>(null);
 
   const allFahrzeuge = useMemo(() => getFahrzeuge(), [refreshKey]);
   const refresh = () => setRefreshKey((k) => k + 1);
