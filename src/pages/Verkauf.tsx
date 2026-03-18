@@ -59,7 +59,7 @@ const Verkauf = () => {
     if (search) {
       const q = search.toLowerCase();
       list = list.filter((f) =>
-        `${f.marke} ${f.modell} ${f.kaeuferName || ""}`.toLowerCase().includes(q)
+        `${f.marke} ${f.modell} ${getVerkaeufername(f.verkaeuferId)}`.toLowerCase().includes(q)
       );
     }
 
