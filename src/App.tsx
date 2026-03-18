@@ -9,6 +9,7 @@ import Index from "./pages/Index.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Ankauf from "./pages/Ankauf.tsx";
 import Fahrzeuge from "./pages/Fahrzeuge.tsx";
+import Verkauf from "./pages/Verkauf.tsx";
 import FahrzeugDetail from "./pages/FahrzeugDetail.tsx";
 import Postfach from "./pages/Postfach.tsx";
 import Leads from "./pages/Leads.tsx";
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/ankauf" element={<Ankauf />} />
             <Route path="/fahrzeuge" element={<Fahrzeuge />} />
+            <Route path="/verkauf" element={<Verkauf />} />
             <Route path="/fahrzeuge/:id" element={<FahrzeugDetail />} />
             <Route path="/postfach" element={<Postfach />} />
             <Route path="/leads" element={<Leads />} />

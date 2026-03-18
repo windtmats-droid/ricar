@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getFahrzeuge, addFahrzeug, updateFahrzeug, getStandzeit, generateId, type Fahrzeug } from "@/lib/fahrzeuge-store";
 import { FahrzeugFormModal } from "@/components/fahrzeuge/FahrzeugFormModal";
 import { InseratPanel } from "@/components/fahrzeuge/InseratPanel";
+import { VerkaufModal } from "@/components/fahrzeuge/VerkaufModal";
 import { Car, Search, ChevronDown, Edit, FileText, CheckCircle, Package, Tag, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +41,10 @@ const Fahrzeuge = () => {
   // Inserat panel state
   const [inseratOpen, setInseratOpen] = useState(false);
   const [inseratFahrzeug, setInseratFahrzeug] = useState<Fahrzeug | null>(null);
-  
+
+  // Verkauf modal state
+  const [verkaufOpen, setVerkaufOpen] = useState(false);
+  const [verkaufFahrzeug, setVerkaufFahrzeug] = useState<Fahrzeug | null>(null);
 
   const allFahrzeuge = useMemo(() => getFahrzeuge(), [refreshKey]);
   const refresh = () => setRefreshKey((k) => k + 1);
@@ -63,10 +67,29 @@ const Fahrzeuge = () => {
     toast({ title: "Status aktualisiert" });
   };
 
-  const markAsSold = (id: string) => {
-    updateFahrzeug(id, { status: "verkauft", verkaufsDatum: new Date().toISOString().split("T")[0] });
+  const openVerkaufModal = (f: Fahrzeug) => {
+    setVerkaufFahrzeug(f);
+    setVerkaufOpen(true);
+  };
+
+  const handleVerkaufConfirm = (data: {
+    verkaufspreis: number; kaeuferName: string; kaeuferTelefon: string;
+    kaeuferEmail: string; verkaufsDatum: string; zahlungsart: string; verkaufsNotizen: string;
+  }) => {
+    if (!verkaufFahrzeug) return;
+    updateFahrzeug(verkaufFahrzeug.id, {
+      status: "verkauft",
+      verkaufspreis: data.verkaufspreis,
+      kaeuferName: data.kaeuferName,
+      kaeuferTelefon: data.kaeuferTelefon,
+      kaeuferEmail: data.kaeuferEmail,
+      verkaufsDatum: data.verkaufsDatum,
+      zahlungsart: data.zahlungsart,
+      verkaufsNotizen: data.verkaufsNotizen,
+    });
+    setVerkaufOpen(false);
     refresh();
-    toast({ title: "Als verkauft markiert" });
+    toast({ title: "Verkauf abgeschlossen", description: `${verkaufFahrzeug.marke} ${verkaufFahrzeug.modell} wurde als verkauft markiert.` });
   };
 
   // --- Form Modal handlers ---
@@ -281,7 +304,7 @@ const Fahrzeuge = () => {
                         <Button variant="outline" size="sm" className="text-xs gap-1">
                           <FileText className="w-3 h-3" /> PDF
                         </Button>
-                        <Button variant="destructive" size="sm" className="text-xs gap-1" onClick={() => markAsSold(f.id)}>
+                        <Button variant="destructive" size="sm" className="text-xs gap-1" onClick={() => openVerkaufModal(f)}>
                           <CheckCircle className="w-3 h-3" /> Verkauft
                         </Button>
                       </div>
@@ -308,6 +331,14 @@ const Fahrzeuge = () => {
           onClose={() => setInseratOpen(false)}
           onPublish={handleInseratPublish}
           fahrzeug={inseratFahrzeug}
+        />
+
+        {/* Verkauf Modal */}
+        <VerkaufModal
+          open={verkaufOpen}
+          onClose={() => setVerkaufOpen(false)}
+          onConfirm={handleVerkaufConfirm}
+          fahrzeug={verkaufFahrzeug}
         />
       </main>
     </div>

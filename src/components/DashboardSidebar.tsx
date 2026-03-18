@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   Car,
   ShoppingCart,
+  TrendingUp,
   Users,
   ScanSearch,
   BarChart3,
@@ -35,6 +36,7 @@ const navSections = [
     items: [
       { icon: ShoppingCart, label: "Ankauf", path: "/ankauf" },
       { icon: Car, label: "Fahrzeuge", path: "/fahrzeuge" },
+      { icon: TrendingUp, label: "Verkauf", path: "/verkauf" },
       { icon: Users, label: "Leads & CRM", path: "/leads", badge: "7", badgeColor: "bg-warning/15 text-warning" },
     ],
   },
