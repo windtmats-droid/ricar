@@ -332,6 +332,14 @@ const Fahrzeuge = () => {
           onPublish={handleInseratPublish}
           fahrzeug={inseratFahrzeug}
         />
+
+        {/* Verkauf Modal */}
+        <VerkaufModal
+          open={verkaufOpen}
+          onClose={() => setVerkaufOpen(false)}
+          onConfirm={handleVerkaufConfirm}
+          fahrzeug={verkaufFahrzeug}
+        />
       </main>
     </div>
   );
