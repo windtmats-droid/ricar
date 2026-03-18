@@ -1,89 +1,236 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Settings } from "lucide-react";
+import { Loader2, Search, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Button } from "@/components/ui/button";
-import { ScanKonfiguration } from "@/components/markt-scan/ScanKonfiguration";
-import { ScanErgebnis } from "@/components/markt-scan/ScanErgebnis";
-import { AutoScanTab } from "@/components/markt-scan/AutoScanTab";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 
-const SAMPLE_FAHRZEUGE = [
-  { id: "s1", marke: "BMW", modell: "320d", baujahr: 2021 },
-  { id: "s2", marke: "Audi", modell: "A4 Avant", baujahr: 2020 },
-  { id: "s3", marke: "VW", modell: "Golf 8 GTI", baujahr: 2022 },
-  { id: "s4", marke: "Mercedes", modell: "C200", baujahr: 2019 },
-  { id: "s5", marke: "Opel", modell: "Insignia", baujahr: 2018 },
-];
+interface ScanResult {
+  marktdurchschnitt?: number;
+  durchschnittspreis?: number;
+  minimum?: number;
+  min_preis?: number;
+  maximum?: number;
+  max_preis?: number;
+  anzahl?: number;
+  anzahl_angebote?: number;
+  bewertung?: string;
+  empfehlung?: string;
+  [key: string]: any;
+}
+
+function getBewertungStyle(bewertung: string) {
+  const lower = bewertung.toLowerCase();
+  if (lower.includes("gut") || lower.includes("günstig") || lower.includes("fair")) {
+    return { bg: "bg-[hsl(120,35%,92%)]", text: "text-[hsl(122,39%,34%)]", icon: TrendingDown };
+  }
+  if (lower.includes("teuer") || lower.includes("hoch") || lower.includes("überteuert")) {
+    return { bg: "bg-destructive/10", text: "text-destructive", icon: TrendingUp };
+  }
+  return { bg: "bg-warning/15", text: "text-warning", icon: Minus };
+}
 
 const MarktScan = () => {
-  const [activeTab, setActiveTab] = useState<"manuell" | "auto">("manuell");
+  const [marke, setMarke] = useState("");
+  const [modell, setModell] = useState("");
+  const [baujahr, setBaujahr] = useState("");
+  const [meinPreis, setMeinPreis] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<ScanResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const { data: dbFahrzeuge = [] } = useQuery({
-    queryKey: ["fahrzeuge-select"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("fahrzeuge")
-        .select("id, marke, modell, baujahr")
-        .order("marke");
-      if (error) throw error;
-      return data || [];
-    },
-  });
+  const handleScan = async () => {
+    if (!marke || !modell) return;
+    setLoading(true);
+    setError(null);
+    setResult(null);
 
-  const fahrzeuge = dbFahrzeuge.length > 0 ? dbFahrzeuge : SAMPLE_FAHRZEUGE;
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("market-scan", {
+        body: {
+          marke,
+          modell,
+          baujahr: baujahr || undefined,
+          meinPreis: meinPreis ? Number(meinPreis) : undefined,
+        },
+      });
+
+      if (fnError) {
+        setError("Edge Function Fehler: " + JSON.stringify(fnError));
+        alert("Edge Function Fehler: " + JSON.stringify(fnError));
+        return;
+      }
+
+      if (data?.error) {
+        setError(data.error);
+        alert("Fehler vom Server: " + data.error);
+        return;
+      }
+
+      console.log("MarktScan result:", data);
+      setResult(data);
+    } catch (err: any) {
+      const msg = err instanceof Error ? err.message : JSON.stringify(err);
+      setError(msg);
+      alert("Fehler: " + msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const avg = result?.marktdurchschnitt ?? result?.durchschnittspreis ?? 0;
+  const min = result?.minimum ?? result?.min_preis ?? 0;
+  const max = result?.maximum ?? result?.max_preis ?? 0;
+  const count = result?.anzahl ?? result?.anzahl_angebote ?? 0;
+  const bewertung = result?.bewertung ?? "";
+  const empfehlung = result?.empfehlung ?? "";
 
   return (
     <div className="flex h-screen w-full bg-background overflow-hidden">
       <DashboardSidebar />
       <main className="flex-1 p-6 overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-5">
-          <div>
-            <h1 className="text-[18px] font-medium text-foreground">Markt-Scan</h1>
-            <p className="text-[13px] text-muted-foreground mt-0.5">Marktpreise analysieren und Bestand optimieren</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
-              <span className="w-2 h-2 rounded-full bg-[hsl(122,39%,34%)]" />
-              Letzter Auto-Scan: heute 06:00 Uhr
+        <div className="mb-5">
+          <h1 className="text-[18px] font-medium text-foreground">Markt-Scan</h1>
+          <p className="text-[13px] text-muted-foreground mt-0.5">
+            Marktpreise analysieren und Ihren Preis vergleichen
+          </p>
+        </div>
+
+        <div className="max-w-2xl space-y-4">
+          {/* Form */}
+          <div className="bg-card border border-border rounded-xl p-5 space-y-4">
+            <h3 className="text-[13px] font-medium text-foreground">Fahrzeug eingeben</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Marke</label>
+                <Input
+                  placeholder="z.B. BMW"
+                  value={marke}
+                  onChange={(e) => setMarke(e.target.value)}
+                  className="h-9 text-[12px]"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Modell</label>
+                <Input
+                  placeholder="z.B. 320d"
+                  value={modell}
+                  onChange={(e) => setModell(e.target.value)}
+                  className="h-9 text-[12px]"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Baujahr</label>
+                <Input
+                  placeholder="z.B. 2021"
+                  value={baujahr}
+                  onChange={(e) => setBaujahr(e.target.value)}
+                  className="h-9 text-[12px]"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Mein Preis in €</label>
+                <Input
+                  type="number"
+                  placeholder="z.B. 28500"
+                  value={meinPreis}
+                  onChange={(e) => setMeinPreis(e.target.value)}
+                  className="h-9 text-[12px]"
+                />
+              </div>
             </div>
-            <Button variant="outline" size="sm" className="gap-1.5 text-[12px] h-8">
-              <Settings className="w-3.5 h-3.5" />
-              Auto-Scan Einstellungen
+            <Button
+              onClick={handleScan}
+              disabled={loading || !marke || !modell}
+              className="w-full gap-2 text-[13px]"
+            >
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Search className="w-4 h-4" />
+              )}
+              {loading ? "Analyse läuft..." : "Markt analysieren"}
             </Button>
           </div>
-        </div>
 
-        {/* Tabs */}
-        <div className="flex gap-1 mb-5 bg-muted rounded-lg p-1 w-fit">
-          <button
-            onClick={() => setActiveTab("manuell")}
-            className={`px-4 py-2 rounded-md text-[13px] font-medium transition-colors ${
-              activeTab === "manuell" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Manueller Scan
-          </button>
-          <button
-            onClick={() => setActiveTab("auto")}
-            className={`px-4 py-2 rounded-md text-[13px] font-medium transition-colors ${
-              activeTab === "auto" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Täglicher Auto-Scan
-          </button>
-        </div>
+          {/* Results */}
+          {result && (
+            <div className="bg-card border border-border rounded-xl p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[13px] font-medium text-foreground">Ergebnis</h3>
+                <span className="text-[11px] text-muted-foreground">
+                  {marke} {modell} {baujahr}
+                </span>
+              </div>
 
-        {/* Content */}
-        {activeTab === "manuell" ? (
-          <div className="grid grid-cols-[2fr_3fr] gap-4">
-            <ScanKonfiguration fahrzeuge={fahrzeuge} />
-            <ScanErgebnis showResult={true} />
-          </div>
-        ) : (
-          <AutoScanTab />
-        )}
+              {/* Price cards */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-muted/50 rounded-lg p-4 text-center">
+                  <div className="text-[11px] text-muted-foreground">Marktdurchschnitt</div>
+                  <div className="text-[22px] font-medium text-primary mt-1">
+                    {avg > 0 ? `€${avg.toLocaleString("de-DE")}` : "–"}
+                  </div>
+                </div>
+                <div className="bg-muted/50 rounded-lg p-4 text-center">
+                  <div className="text-[11px] text-muted-foreground">Vergleichsfahrzeuge</div>
+                  <div className="text-[22px] font-medium text-foreground mt-1">{count}</div>
+                </div>
+                <div className="bg-muted/50 rounded-lg p-4 text-center">
+                  <div className="text-[11px] text-muted-foreground">Minimum</div>
+                  <div className="text-[22px] font-medium text-[hsl(122,39%,34%)] mt-1">
+                    {min > 0 ? `€${min.toLocaleString("de-DE")}` : "–"}
+                  </div>
+                </div>
+                <div className="bg-muted/50 rounded-lg p-4 text-center">
+                  <div className="text-[11px] text-muted-foreground">Maximum</div>
+                  <div className="text-[22px] font-medium text-warning mt-1">
+                    {max > 0 ? `€${max.toLocaleString("de-DE")}` : "–"}
+                  </div>
+                </div>
+              </div>
+
+              {/* Bewertung badge + Empfehlung */}
+              {bewertung && (
+                <div className="space-y-2">
+                  {(() => {
+                    const style = getBewertungStyle(bewertung);
+                    const Icon = style.icon;
+                    return (
+                      <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full ${style.bg} ${style.text} text-[12px] font-medium`}>
+                        <Icon className="w-3.5 h-3.5" />
+                        {bewertung}
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+
+              {empfehlung && (
+                <div className="bg-primary/5 border-l-[3px] border-primary rounded-r-lg p-3 flex items-start gap-2">
+                  <Badge variant="info" className="text-[9px] px-1.5 py-0 shrink-0 mt-0.5">KI</Badge>
+                  <p className="text-[12px] text-foreground leading-relaxed">{empfehlung}</p>
+                </div>
+              )}
+
+              {/* Raw data fallback for debugging */}
+              {!avg && !bewertung && (
+                <div className="bg-muted/50 rounded-lg p-3">
+                  <p className="text-[11px] text-muted-foreground mb-1">Rohdaten:</p>
+                  <pre className="text-[11px] text-foreground whitespace-pre-wrap break-all">
+                    {JSON.stringify(result, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
+
+          {error && !result && (
+            <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-4">
+              <p className="text-[12px] text-destructive">{error}</p>
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );
