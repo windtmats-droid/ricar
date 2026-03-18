@@ -51,7 +51,6 @@ const navSections = [
     label: "Analyse",
     items: [
       { icon: BarChart3, label: "Analytics", path: "/analytics" },
-      { icon: ScanSearch, label: "Markt-Scan", path: "/markt-scan" },
     ],
   },
   {
