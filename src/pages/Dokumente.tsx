@@ -7,9 +7,9 @@ import { UebergabeprotokollForm, type UebergabeprotokollData, defaultUebergabepr
 import { RechnungForm, type RechnungData, defaultRechnungData } from "@/components/dokumente/RechnungForm";
 import { DokumenteListe, type GeneratedDocument } from "@/components/dokumente/DokumenteListe";
 import { generateKaufvertragPdf, generateUebergabeprotokollPdf, generateRechnungPdf } from "@/components/dokumente/pdfGenerator";
+import { loadAutohausData, saveAutohausData, type AutohausData } from "@/components/einstellungen/AutohausDatenSection";
 
 const DOCS_KEY = "generated_documents";
-const SELLER_KEY = "seller_data";
 
 export interface VerkaeuerData {
   autohausName: string;
@@ -27,16 +27,18 @@ export const defaultVerkaeuerData: VerkaeuerData = {
   autohausName: "", strasse: "", plzOrt: "", telefon: "", email: "", steuernummer: "", iban: "", bic: "", bank: "",
 };
 
-function loadSeller(): VerkaeuerData {
-  try {
-    const raw = localStorage.getItem(SELLER_KEY);
-    if (raw) return { ...defaultVerkaeuerData, ...JSON.parse(raw) };
-  } catch {}
-  return { ...defaultVerkaeuerData };
-}
-
-function saveSeller(d: VerkaeuerData) {
-  localStorage.setItem(SELLER_KEY, JSON.stringify(d));
+function autohausToVerkaeufer(ah: AutohausData): VerkaeuerData {
+  return {
+    autohausName: ah.firmenname,
+    strasse: [ah.strasse, ah.hausnr].filter(Boolean).join(" "),
+    plzOrt: [ah.plz, ah.ort].filter(Boolean).join(" "),
+    telefon: ah.telefon,
+    email: ah.email,
+    steuernummer: ah.steuernummer,
+    iban: ah.iban,
+    bic: ah.bic,
+    bank: ah.bankname,
+  };
 }
 
 function loadDocs(): GeneratedDocument[] {
@@ -51,21 +53,25 @@ function saveDocs(docs: GeneratedDocument[]) {
   localStorage.setItem(DOCS_KEY, JSON.stringify(docs));
 }
 
-function nextRechnungsNr(docs: GeneratedDocument[]): string {
-  const year = new Date().getFullYear();
-  const reCount = docs.filter(d => d.typ === "rechnung" && d.nummer.startsWith(`RE-${year}`)).length;
-  return `RE-${year}-${String(reCount + 1).padStart(3, "0")}`;
-}
-
 const Dokumente = () => {
   const [tab, setTab] = useState("kaufvertrag");
-  const [verkaeufer, setVerkaeufer] = useState<VerkaeuerData>(loadSeller);
+  const [verkaeufer, setVerkaeufer] = useState<VerkaeuerData>(() => {
+    const ah = loadAutohausData();
+    const v = autohausToVerkaeufer(ah);
+    // Only use if there's actual data
+    return v.autohausName ? v : { ...defaultVerkaeuerData };
+  });
   const [kaufvertrag, setKaufvertrag] = useState<KaufvertragData>({ ...defaultKaufvertragData });
   const [protokoll, setProtokoll] = useState<UebergabeprotokollData>({ ...defaultUebergabeprotokollData });
-  const [rechnung, setRechnung] = useState<RechnungData>({ ...defaultRechnungData });
+  const [rechnung, setRechnung] = useState<RechnungData>(() => {
+    const ah = loadAutohausData();
+    return {
+      ...defaultRechnungData,
+      rechnungsnummer: `${ah.rechnungsnrPraefix}${ah.naechsteRechnungsnr}`,
+    };
+  });
   const [docs, setDocs] = useState<GeneratedDocument[]>(loadDocs);
 
-  useEffect(() => { saveSeller(verkaeufer); }, [verkaeufer]);
   useEffect(() => { saveDocs(docs); }, [docs]);
 
   const updateVerkaeufer = (p: Partial<VerkaeuerData>) => setVerkaeufer(prev => ({ ...prev, ...p }));
@@ -95,10 +101,16 @@ const Dokumente = () => {
   };
 
   const handleGenerateRechnung = () => {
-    const nr = nextRechnungsNr(docs);
+    const ah = loadAutohausData();
+    const nr = rechnung.rechnungsnummer || `${ah.rechnungsnrPraefix}${ah.naechsteRechnungsnr}`;
     const brutto = rechnung.nettobetrag * 1.19;
     const pdfData = generateRechnungPdf(verkaeufer, { ...rechnung, rechnungsnummer: nr, bruttobetrag: brutto, mwstBetrag: brutto - rechnung.nettobetrag }, nr);
     addDoc("rechnung", nr, `${rechnung.vorname} ${rechnung.nachname}`, pdfData);
+
+    // Auto-increment
+    const nextNr = ah.naechsteRechnungsnr + 1;
+    saveAutohausData({ ...ah, naechsteRechnungsnr: nextNr });
+    setRechnung(prev => ({ ...prev, rechnungsnummer: `${ah.rechnungsnrPraefix}${nextNr}` }));
   };
 
   const deleteDoc = (id: string) => setDocs(prev => prev.filter(d => d.id !== id));

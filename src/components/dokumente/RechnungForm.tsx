@@ -55,7 +55,7 @@ export function RechnungForm({ data, update, verkaeufer, updateVerkaeufer, onGen
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label className="text-[11px]">Rechnungsnummer</Label>
-              <Input value="Wird automatisch vergeben" disabled className="h-9 text-[13px] bg-muted" />
+              <Input value={data.rechnungsnummer} onChange={e => update({ rechnungsnummer: e.target.value })} className="h-9 text-[13px]" placeholder="RE-2026-1001" />
             </div>
             <div>
               <Label className="text-[11px]">Rechnungsdatum</Label>

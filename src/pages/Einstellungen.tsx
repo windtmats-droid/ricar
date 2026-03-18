@@ -5,12 +5,14 @@ import { IntegrationenSection } from "@/components/einstellungen/IntegrationenSe
 import { TeamSection } from "@/components/einstellungen/TeamSection";
 import { AutoScanSection } from "@/components/einstellungen/AutoScanSection";
 import { ErscheinungsbildSection } from "@/components/einstellungen/ErscheinungsbildSection";
+import { AutohausDatenSection } from "@/components/einstellungen/AutohausDatenSection";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 const TABS = [
   { key: "erscheinungsbild", label: "Erscheinungsbild" },
+  { key: "autohaus", label: "Autohaus-Daten" },
   { key: "integrationen", label: "Integrationen" },
   { key: "team", label: "Team & Rollen" },
   { key: "autoscan", label: "Auto-Scan" },
@@ -88,6 +90,7 @@ const Einstellungen = () => {
 
           <div className="flex-1 min-w-0">
             {activeTab === "erscheinungsbild" && <ErscheinungsbildSection />}
+            {activeTab === "autohaus" && <AutohausDatenSection />}
             {activeTab === "integrationen" && (
               <IntegrationenSection
                 mobilede={{ user: settings?.mobilede_user || "", pw: settings?.mobilede_pw_encrypted || "", kundennr: settings?.mobilede_kundennr || "" }}

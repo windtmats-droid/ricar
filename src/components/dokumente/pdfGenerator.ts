@@ -13,21 +13,68 @@ function euro(n: number | string): string {
   return v.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 }
 
-function addLogo(doc: jsPDF) {
+function hexToRgb(hex: string): [number, number, number] {
+  hex = hex.replace("#", "");
+  return [
+    parseInt(hex.substring(0, 2), 16),
+    parseInt(hex.substring(2, 4), 16),
+    parseInt(hex.substring(4, 6), 16),
+  ];
+}
+
+function getAccentColors(): { from: [number, number, number]; to: [number, number, number] } {
+  const fromHex = getComputedStyle(document.documentElement).getPropertyValue("--accent-from").trim() || "#2563eb";
+  const toHex = getComputedStyle(document.documentElement).getPropertyValue("--accent-to").trim() || "#1e40af";
+  return { from: hexToRgb(fromHex), to: hexToRgb(toHex) };
+}
+
+function addBrandedHeader(doc: jsPDF, title: string, subtitle: string) {
+  const accent = getAccentColors();
+
+  // Accent bar at top
+  doc.setFillColor(...accent.from);
+  doc.rect(0, 0, PAGE_W, 4, "F");
+
+  // Logo
   try {
-    const logo = localStorage.getItem("uploadedLogo");
+    const logo = localStorage.getItem("uploadedLogo") || localStorage.getItem("app-custom-logo");
     if (logo) {
-      doc.addImage(logo, "PNG", PAGE_W - MARGIN - 40, MARGIN, 40, 15);
+      doc.addImage(logo, "PNG", PAGE_W - MARGIN - 40, MARGIN - 2, 40, 15);
     }
   } catch {}
+
+  // Title
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...accent.from);
+  doc.text(title, MARGIN, MARGIN + 8);
+
+  // Subtitle
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(100);
+  doc.text(subtitle, MARGIN, MARGIN + 14);
+
+  // Thin accent line under header
+  doc.setDrawColor(...accent.from);
+  doc.setLineWidth(0.5);
+  doc.line(MARGIN, MARGIN + 17, PAGE_W - MARGIN, MARGIN + 17);
+  doc.setLineWidth(0.2);
+
+  return MARGIN + 24;
 }
 
 function heading(doc: jsPDF, y: number, text: string): number {
+  const accent = getAccentColors();
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
+  doc.setTextColor(...accent.from);
   doc.text(text, MARGIN, y);
-  doc.setDrawColor(180);
+  doc.setDrawColor(...accent.from);
+  doc.setLineWidth(0.3);
   doc.line(MARGIN, y + 1.5, PAGE_W - MARGIN, y + 1.5);
+  doc.setLineWidth(0.2);
+  doc.setTextColor(30);
   return y + 7;
 }
 
@@ -67,17 +114,7 @@ function signatureBlock(doc: jsPDF, y: number) {
 // ---------- KAUFVERTRAG ----------
 export function generateKaufvertragPdf(v: VerkaeuerData, d: KaufvertragData, nr: string): string {
   const doc = new jsPDF();
-  addLogo(doc);
-
-  doc.setFontSize(16);
-  doc.setFont("helvetica", "bold");
-  doc.text("Kaufvertrag", MARGIN, MARGIN + 5);
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(100);
-  doc.text(`Nr. ${nr}`, MARGIN, MARGIN + 11);
-
-  let y = MARGIN + 20;
+  let y = addBrandedHeader(doc, "Kaufvertrag", `Nr. ${nr}`);
 
   // Verkäufer
   y = heading(doc, y, "Verkäufer");
@@ -152,17 +189,7 @@ export function generateKaufvertragPdf(v: VerkaeuerData, d: KaufvertragData, nr:
 // ---------- ÜBERGABEPROTOKOLL ----------
 export function generateUebergabeprotokollPdf(v: VerkaeuerData, d: UebergabeprotokollData, nr: string): string {
   const doc = new jsPDF();
-  addLogo(doc);
-
-  doc.setFontSize(16);
-  doc.setFont("helvetica", "bold");
-  doc.text("Übergabeprotokoll", MARGIN, MARGIN + 5);
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(100);
-  doc.text(`Nr. ${nr}`, MARGIN, MARGIN + 11);
-
-  let y = MARGIN + 20;
+  let y = addBrandedHeader(doc, "Übergabeprotokoll", `Nr. ${nr}`);
 
   y = heading(doc, y, "Autohaus");
   y = field(doc, MARGIN, y, "Firma", v.autohausName);
@@ -224,18 +251,8 @@ export function generateUebergabeprotokollPdf(v: VerkaeuerData, d: Uebergabeprot
 // ---------- RECHNUNG ----------
 export function generateRechnungPdf(v: VerkaeuerData, d: RechnungData & { rechnungsnummer: string; bruttobetrag: number; mwstBetrag: number }, nr: string): string {
   const doc = new jsPDF();
-  addLogo(doc);
-
-  // Header
-  doc.setFontSize(16);
-  doc.setFont("helvetica", "bold");
-  doc.text("Rechnung", MARGIN, MARGIN + 5);
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(100);
-  doc.text(`Nr. ${nr}  ·  Datum: ${d.rechnungsdatum}`, MARGIN, MARGIN + 11);
-
-  let y = MARGIN + 22;
+  const accent = getAccentColors();
+  let y = addBrandedHeader(doc, "Rechnung", `Nr. ${nr}  ·  Datum: ${d.rechnungsdatum}`);
 
   // Seller + Buyer side by side
   const fLeft = MARGIN, fRight = MARGIN + COL_W + 5;
@@ -271,27 +288,31 @@ export function generateRechnungPdf(v: VerkaeuerData, d: RechnungData & { rechnu
   // Amounts table
   y = checkPage(doc, y, 40);
   y = heading(doc, y, "Beträge");
-  doc.setFillColor(245, 245, 245);
+
+  // Accent-colored table header
+  doc.setFillColor(...accent.from);
   doc.rect(MARGIN, y - 1, PAGE_W - MARGIN * 2, 7, "F");
   doc.setFontSize(8.5);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(50);
+  doc.setTextColor(255);
   doc.text("Position", MARGIN + 2, y + 3.5);
   doc.text("Betrag", PAGE_W - MARGIN - 2, y + 3.5, { align: "right" });
   y += 9;
 
   doc.setFont("helvetica", "normal");
+  doc.setTextColor(50);
   doc.text("Nettobetrag", MARGIN + 2, y);
   doc.text(euro(d.nettobetrag), PAGE_W - MARGIN - 2, y, { align: "right" });
   y += 5;
   doc.text("MwSt. 19%", MARGIN + 2, y);
   doc.text(euro(d.mwstBetrag), PAGE_W - MARGIN - 2, y, { align: "right" });
   y += 2;
-  doc.setDrawColor(150);
+  doc.setDrawColor(...accent.from);
   doc.line(MARGIN, y, PAGE_W - MARGIN, y);
   y += 5;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
+  doc.setTextColor(30);
   doc.text("Gesamtbetrag (brutto)", MARGIN + 2, y);
   doc.text(euro(d.bruttobetrag), PAGE_W - MARGIN - 2, y, { align: "right" });
   y += 10;
@@ -307,10 +328,12 @@ export function generateRechnungPdf(v: VerkaeuerData, d: RechnungData & { rechnu
     y += 6;
   }
 
-  // Footer
+  // Footer with accent line
   y = Math.max(y + 10, 260);
-  doc.setDrawColor(200);
+  doc.setDrawColor(...accent.from);
+  doc.setLineWidth(0.5);
   doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+  doc.setLineWidth(0.2);
   y += 4;
   doc.setFontSize(7);
   doc.setTextColor(140);
