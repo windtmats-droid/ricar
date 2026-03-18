@@ -5,7 +5,7 @@ const corsHeaders = {
 
 const WEBHOOK_URL = "http://91.99.97.102:5678/webhook/8246694b-0a6b-471f-8861-d616f419509e";
 
-const FALLBACK = { bewertung: "Mittel", begruendung: "KI-Bewertung konnte nicht durchgeführt werden.", antwort: "" };
+const FALLBACK = { bewertung: "Mittel", begruendung: "KI-Bewertung konnte nicht durchgeführt werden. Bitte prüfen Sie den n8n-Workflow.", antwort: "" };
 
 function stripCodeFences(text: string): string {
   return text.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
