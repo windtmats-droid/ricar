@@ -216,8 +216,8 @@ const Fahrzeuge = () => {
   const openVerkaufModal = (f: Fahrzeug) => { setVerkaufFahrzeug(f); setVerkaufOpen(true); };
 
   const handleVerkaufConfirm = (data: {
-    verkaufspreis: number; kaeuferName: string; kaeuferTelefon: string;
-    kaeuferEmail: string; verkaufsDatum: string; zahlungsart: string; verkaufsNotizen: string;
+    verkaufspreis: number; verkaeuferId: string;
+    verkaufsDatum: string; verkaufsNotizen: string;
   }) => {
     if (!verkaufFahrzeug) return;
     updateFahrzeug(verkaufFahrzeug.id, { status: "verkauft", ...data });

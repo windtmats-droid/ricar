@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
 import { getFahrzeuge, type Fahrzeug } from "@/lib/fahrzeuge-store";
+import { getTeam } from "@/components/fahrzeuge/VerkaufModal";
 import { useNavigate } from "react-router-dom";
 import { TrendingUp, Clock, Car, Euro, Search, Eye, FileText, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,13 @@ const Verkauf = () => {
   const [sortBy, setSortBy] = useState<SortKey>("datum");
   const [dateRange, setDateRange] = useState<DateRange>("alle");
   const [detailFahrzeug, setDetailFahrzeug] = useState<Fahrzeug | null>(null);
+  const teamMembers = useMemo(() => getTeam(), []);
+
+  const getVerkaeufername = (id?: string) => {
+    if (!id) return "–";
+    const m = teamMembers.find(t => t.id === id);
+    return m ? `${m.vorname} ${m.nachname}` : "–";
+  };
 
   const verkaufte = useMemo(() => {
     let list = getFahrzeuge().filter((f) => f.status === "verkauft");
@@ -52,7 +59,7 @@ const Verkauf = () => {
     if (search) {
       const q = search.toLowerCase();
       list = list.filter((f) =>
-        `${f.marke} ${f.modell} ${f.kaeuferName || ""}`.toLowerCase().includes(q)
+        `${f.marke} ${f.modell} ${getVerkaeufername(f.verkaeuferId)}`.toLowerCase().includes(q)
       );
     }
 
@@ -75,14 +82,6 @@ const Verkauf = () => {
     d > 60 ? "text-red-600 dark:text-red-400" : d > 30 ? "text-orange-600 dark:text-orange-400" : "text-green-600 dark:text-green-400";
 
   const margeColor = (v: number) => v >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400";
-
-  const zahlungsartBadge = (z?: string) => {
-    if (!z) return null;
-    const cls = z === "Bar" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-      : z === "Finanzierung" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
-      : "bg-muted text-muted-foreground";
-    return <span className={cn("text-[10px] px-2 py-0.5 rounded-full font-medium", cls)}>{z}</span>;
-  };
 
   const df = detailFahrzeug;
 
@@ -158,9 +157,8 @@ const Verkauf = () => {
                     <th className="text-right px-3 py-3 font-medium text-muted-foreground">Verkauf</th>
                     <th className="text-right px-3 py-3 font-medium text-muted-foreground">Marge</th>
                     <th className="text-center px-3 py-3 font-medium text-muted-foreground">Standzeit</th>
-                    <th className="text-left px-3 py-3 font-medium text-muted-foreground">Käufer</th>
+                    <th className="text-left px-3 py-3 font-medium text-muted-foreground">Verkäufer</th>
                     <th className="text-left px-3 py-3 font-medium text-muted-foreground">Datum</th>
-                    <th className="text-center px-3 py-3 font-medium text-muted-foreground">Zahlung</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Aktionen</th>
                   </tr>
                 </thead>
@@ -195,9 +193,8 @@ const Verkauf = () => {
                         <td className="text-center px-3 py-3">
                           <span className={cn("font-medium", standzeitColor(sd))}>{sd} Tage</span>
                         </td>
-                        <td className="px-3 py-3 text-foreground">{f.kaeuferName || "–"}</td>
+                        <td className="px-3 py-3 text-foreground">{getVerkaeufername(f.verkaeuferId)}</td>
                         <td className="px-3 py-3 text-muted-foreground">{f.verkaufsDatum ? new Date(f.verkaufsDatum).toLocaleDateString("de-DE") : "–"}</td>
-                        <td className="text-center px-3 py-3">{zahlungsartBadge(f.zahlungsart)}</td>
                         <td className="text-right px-4 py-3">
                           <div className="flex justify-end gap-1.5">
                             <Button variant="ghost" size="sm" className="h-7 text-[11px] gap-1" onClick={() => setDetailFahrzeug(f)}>
@@ -278,11 +275,8 @@ const Verkauf = () => {
                     <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
                       {[
                         ["Verkaufspreis", `€ ${(df.verkaufspreis || 0).toLocaleString("de-DE")}`],
-                        ["Käufer", df.kaeuferName || "–"],
-                        ["Telefon", df.kaeuferTelefon || "–"],
-                        ["E-Mail", df.kaeuferEmail || "–"],
+                        ["Verkäufer", getVerkaeufername(df.verkaeuferId)],
                         ["Datum", df.verkaufsDatum ? new Date(df.verkaufsDatum).toLocaleDateString("de-DE") : "–"],
-                        ["Zahlungsart", df.zahlungsart || "–"],
                       ].map(([l, v]) => (
                         <div key={l} className="flex justify-between py-1 border-b border-border/50">
                           <span className="text-muted-foreground">{l}</span>
