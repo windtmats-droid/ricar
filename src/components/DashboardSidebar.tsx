@@ -58,6 +58,7 @@ const navSections = [
     label: "Verwaltung",
     items: [
       { icon: FileText, label: "Dokumente", path: "/dokumente" },
+      { icon: Calculator, label: "Kalkulation", path: "/kalkulation" },
       { icon: Settings, label: "Einstellungen", path: "/einstellungen" },
     ],
   },
