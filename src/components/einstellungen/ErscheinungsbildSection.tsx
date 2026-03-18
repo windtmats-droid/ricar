@@ -38,22 +38,27 @@ export function ErscheinungsbildSection() {
       {/* Accent Gradient */}
       <div className="space-y-2">
         <div className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">Akzentfarbe</div>
-        <div className="flex gap-3 flex-wrap">
-          {GRADIENT_OPTIONS.map((g) => (
-            <button
-              key={g.key}
-              onClick={() => setAccent(g.key)}
-              className={cn(
-                "w-10 h-10 rounded-lg transition-all bg-gradient-to-br",
-                g.classes,
-                accent === g.key
-                  ? "ring-2 ring-offset-2 ring-foreground/40 scale-110"
-                  : "hover:scale-105 opacity-80 hover:opacity-100"
-              )}
-              title={g.label}
-            />
-          ))}
-        </div>
+        <TooltipProvider delayDuration={200}>
+          <div className="grid grid-cols-5 sm:grid-cols-7 gap-3">
+            {GRADIENT_OPTIONS.map((g) => (
+              <Tooltip key={g.key}>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setAccent(g.key)}
+                    className={cn(
+                      "w-12 h-12 rounded-lg transition-all bg-gradient-to-br",
+                      g.classes,
+                      accent === g.key
+                        ? "ring-2 ring-offset-2 ring-foreground/40 scale-110"
+                        : "hover:scale-105 opacity-80 hover:opacity-100"
+                    )}
+                  />
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">{g.label}</TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
+        </TooltipProvider>
         <p className="text-[11px] text-muted-foreground">
           Wird auf Sidebar-Header, Buttons und Badges angewendet
         </p>
