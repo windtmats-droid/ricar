@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 const TABS = [
+  { key: "erscheinungsbild", label: "Erscheinungsbild" },
   { key: "integrationen", label: "Integrationen" },
   { key: "team", label: "Team & Rollen" },
   { key: "autoscan", label: "Auto-Scan" },
