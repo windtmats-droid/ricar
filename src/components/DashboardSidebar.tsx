@@ -59,6 +59,7 @@ const navSections = [
 export function DashboardSidebar() {
   const location = useLocation();
   const { profile, signOut } = useAuth();
+  const { logo, gradientStyle } = useAppearance();
 
   const displayName = profile
     ? `${profile.vorname || ""} ${profile.nachname || ""}`.trim() || profile.email || "Benutzer"
