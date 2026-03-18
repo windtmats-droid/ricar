@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { getFahrzeuge, type Fahrzeug } from "@/lib/fahrzeuge-store";
-import { getTeam, type TeamMember } from "@/components/fahrzeuge/VerkaufModal";
+import { getTeam } from "@/components/fahrzeuge/VerkaufModal";
 import { useNavigate } from "react-router-dom";
 import { TrendingUp, Clock, Car, Euro, Search, Eye, FileText, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
