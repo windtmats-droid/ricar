@@ -277,7 +277,7 @@ export default function Chat() {
                   style={msg.role === "user" ? gradientStyle : undefined}
                 >
                   {msg.role === "assistant" ? (
-                    <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none [&>p]:mb-2 [&>ul]:mb-2 [&>ul]:list-disc [&>ul]:pl-4 [&>ol]:mb-2 [&>ol]:list-decimal [&>ol]:pl-4">
+                    <ReactMarkdown components={{ p: ({children}) => <p className="mb-2">{children}</p>, ul: ({children}) => <ul className="mb-2 list-disc pl-4">{children}</ul>, ol: ({children}) => <ol className="mb-2 list-decimal pl-4">{children}</ol> }}>
                       {msg.content}
                     </ReactMarkdown>
                   ) : (
