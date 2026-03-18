@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Badge } from "@/components/ui/badge";
+import { useAppearance } from "@/hooks/useAppearance";
 
 const navSections = [
   {
