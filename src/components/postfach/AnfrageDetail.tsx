@@ -72,16 +72,12 @@ export function AnfrageDetail({ anfrage: a, onMarkRead, onArchive }: Props) {
 
         console.log("Evaluate response:", data);
 
-        // Parse content[0].text which is a JSON string
-        let parsed: KiEvaluation;
-        if (data?.content?.[0]?.text) {
-          parsed = JSON.parse(data.content[0].text);
-        } else if (data?.bewertung) {
-          // Direct object response
-          parsed = data as KiEvaluation;
-        } else {
-          throw new Error("Unerwartetes Antwortformat");
-        }
+        // Edge function now returns clean {bewertung, begruendung, antwort}
+        const parsed: KiEvaluation = {
+          bewertung: data?.bewertung || "Mittel",
+          begruendung: data?.begruendung || "",
+          antwort: data?.antwort || "",
+        };
 
         setKiEval(parsed);
         if (parsed.antwort) {
