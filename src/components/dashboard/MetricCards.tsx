@@ -1,4 +1,4 @@
-import { Car, Package, Tag, Clock, AlertTriangle } from "lucide-react";
+import { Package, Tag, Clock, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useMemo } from "react";
