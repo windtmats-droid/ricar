@@ -8,6 +8,7 @@ import { RechnungForm, type RechnungData, defaultRechnungData } from "@/componen
 import { DokumenteListe, type GeneratedDocument } from "@/components/dokumente/DokumenteListe";
 import { generateKaufvertragPdf, generateUebergabeprotokollPdf, generateRechnungPdf } from "@/components/dokumente/pdfGenerator";
 import { loadAutohausData, saveAutohausData, type AutohausData } from "@/components/einstellungen/AutohausDatenSection";
+import { useToast } from "@/hooks/use-toast";
 
 const DOCS_KEY = "generated_documents";
 
@@ -53,12 +54,38 @@ function saveDocs(docs: GeneratedDocument[]) {
   localStorage.setItem(DOCS_KEY, JSON.stringify(docs));
 }
 
+function loadPrefill(): Record<string, any> | null {
+  try {
+    const raw = localStorage.getItem("prefillFahrzeug");
+    if (raw) {
+      localStorage.removeItem("prefillFahrzeug");
+      return JSON.parse(raw);
+    }
+  } catch {}
+  return null;
+}
+
+function applyPrefillToFahrzeugFields(prefill: Record<string, any>) {
+  return {
+    marke: prefill.marke || "",
+    modell: prefill.modell || "",
+    typ: prefill.typ || "",
+    erstzulassung: prefill.erstzulassung || "",
+    kilometerstand: prefill.km || "",
+    farbe: prefill.farbe || "",
+    fin: prefill.fin || "",
+    kennzeichen: prefill.kennzeichen || "",
+    huBis: prefill.huBis || "",
+    tuevBis: prefill.tuevBis || "",
+  };
+}
+
 const Dokumente = () => {
+  const { toast } = useToast();
   const [tab, setTab] = useState("kaufvertrag");
   const [verkaeufer, setVerkaeufer] = useState<VerkaeuerData>(() => {
     const ah = loadAutohausData();
     const v = autohausToVerkaeufer(ah);
-    // Only use if there's actual data
     return v.autohausName ? v : { ...defaultVerkaeuerData };
   });
   const [kaufvertrag, setKaufvertrag] = useState<KaufvertragData>({ ...defaultKaufvertragData });
@@ -71,6 +98,18 @@ const Dokumente = () => {
     };
   });
   const [docs, setDocs] = useState<GeneratedDocument[]>(loadDocs);
+
+  // Prefill from vehicle data
+  useEffect(() => {
+    const prefill = loadPrefill();
+    if (!prefill) return;
+    const fields = applyPrefillToFahrzeugFields(prefill);
+    const preis = prefill.preis ? String(prefill.preis) : "";
+    setKaufvertrag(prev => ({ ...prev, ...fields, kaufpreis: preis }));
+    setProtokoll(prev => ({ ...prev, ...fields, kmBeiUebergabe: prefill.km || "" }));
+    setRechnung(prev => ({ ...prev, ...fields, nettobetrag: prefill.preis ? Number(prefill.preis) : 0 }));
+    toast({ title: "Fahrzeugdaten übernommen", description: "Fahrzeugdaten wurden automatisch in das Formular eingefügt." });
+  }, []);
 
   useEffect(() => { saveDocs(docs); }, [docs]);
 

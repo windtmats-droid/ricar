@@ -544,12 +544,12 @@ const Fahrzeuge = () => {
                         <div className="text-xs text-foreground/80 line-clamp-3 mb-3">{f.inseratText || f.inseratEntwurf}</div>
                         <div className="text-base font-bold text-foreground mb-3">€ {(f.inseratPreis || f.empfohlenerVKPreis || 0).toLocaleString("de-DE")}</div>
 
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           <Button variant="outline" size="sm" className="text-xs flex-1 gap-1" onClick={() => openInseratEdit(f)}>
                             <Edit className="w-3 h-3" /> Bearbeiten
                           </Button>
-                          <Button variant="outline" size="sm" className="text-xs gap-1">
-                            <FileText className="w-3 h-3" /> PDF
+                          <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => handleDokumentErstellen(f)}>
+                            <FileText className="w-3 h-3" /> Dokument
                           </Button>
                           <Button variant="destructive" size="sm" className="text-xs gap-1" onClick={() => openVerkaufModal(f)}>
                             <CheckCircle className="w-3 h-3" /> Verkauft
