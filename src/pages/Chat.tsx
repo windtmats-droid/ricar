@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Sparkles, Send, Bot, Plus, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getFahrzeuge, getStandzeit } from "@/lib/fahrzeuge-store";
+import { getFahrzeuge } from "@/lib/fahrzeuge-store";
 import { useAppearance } from "@/hooks/useAppearance";
 import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
