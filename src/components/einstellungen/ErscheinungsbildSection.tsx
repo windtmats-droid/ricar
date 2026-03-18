@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { Palette, Sun, Moon, Upload, X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useAppearance, GRADIENT_OPTIONS, type AccentGradient } from "@/hooks/useAppearance";
 
