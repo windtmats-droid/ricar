@@ -2,14 +2,13 @@ import {
   LayoutDashboard,
   Car,
   ShoppingCart,
-  TrendingUp,
+  Tag,
   Users,
   ScanSearch,
   BarChart3,
-  Calculator,
   FileText,
   Zap,
-  Inbox,
+  Mail,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -20,37 +19,36 @@ import { useAppearance } from "@/hooks/useAppearance";
 
 const navSections = [
   {
-    label: "Hauptmenü",
+    label: "Übersicht",
     items: [
       { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
     ],
   },
   {
-    label: "KI-Funktionen",
-    items: [
-      { icon: Inbox, label: "Postfach", path: "/postfach", badge: "12", badgeColor: "bg-primary/10 text-primary" },
-    ],
-  },
-  {
-    label: "Fahrzeuge",
+    label: "Fahrzeugverwaltung",
     items: [
       { icon: ShoppingCart, label: "Ankauf", path: "/ankauf" },
       { icon: Car, label: "Fahrzeuge", path: "/fahrzeuge" },
-      { icon: TrendingUp, label: "Verkauf", path: "/verkauf" },
+      { icon: Tag, label: "Verkauf", path: "/verkauf" },
+    ],
+  },
+  {
+    label: "Kommunikation",
+    items: [
+      { icon: Mail, label: "Postfach", path: "/postfach", badge: "12", badgeColor: "bg-primary/10 text-primary" },
       { icon: Users, label: "Leads & CRM", path: "/leads", badge: "7", badgeColor: "bg-warning/15 text-warning" },
     ],
   },
   {
     label: "Analyse",
     items: [
-      { icon: ScanSearch, label: "Markt-Scan", path: "/markt-scan" },
       { icon: BarChart3, label: "Analytics", path: "/analytics" },
+      { icon: ScanSearch, label: "Markt-Scan", path: "/markt-scan" },
     ],
   },
   {
     label: "Verwaltung",
     items: [
-      { icon: Calculator, label: "Kalkulation", path: "/kalkulation" },
       { icon: FileText, label: "Dokumente", path: "/dokumente" },
       { icon: Settings, label: "Einstellungen", path: "/einstellungen" },
     ],
