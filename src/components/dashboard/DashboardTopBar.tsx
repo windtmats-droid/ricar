@@ -1,5 +1,6 @@
-import { ChevronDown, Upload, Plus } from "lucide-react";
+import { ChevronDown, Upload, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export function DashboardTopBar() {
   const today = new Date().toLocaleDateString("de-DE", {
@@ -22,8 +23,10 @@ export function DashboardTopBar() {
         <Button variant="outline" size="sm" className="text-xs gap-1.5">
           <Upload className="w-3.5 h-3.5" /> Export
         </Button>
-        <Button size="sm" className="text-xs gap-1.5">
-          <Plus className="w-3.5 h-3.5" /> Inserat erstellen
+        <Button size="sm" className="text-xs gap-1.5" asChild>
+          <Link to="/ankauf">
+            <ShoppingCart className="w-3.5 h-3.5" /> Fahrzeug ankaufen
+          </Link>
         </Button>
       </div>
     </div>

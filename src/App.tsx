@@ -7,7 +7,7 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import { useAppearance } from "@/hooks/useAppearance";
 import Index from "./pages/Index.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
-import InseratErstellen from "./pages/InseratErstellen.tsx";
+import Ankauf from "./pages/Ankauf.tsx";
 import Fahrzeuge from "./pages/Fahrzeuge.tsx";
 import FahrzeugDetail from "./pages/FahrzeugDetail.tsx";
 import Postfach from "./pages/Postfach.tsx";
@@ -40,7 +40,7 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/inserate/neu" element={<InseratErstellen />} />
+            <Route path="/ankauf" element={<Ankauf />} />
             <Route path="/fahrzeuge" element={<Fahrzeuge />} />
             <Route path="/fahrzeuge/:id" element={<FahrzeugDetail />} />
             <Route path="/postfach" element={<Postfach />} />

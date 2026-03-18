@@ -1,57 +1,61 @@
-import { FileText, UserPlus, Clock, Euro, TrendingUp } from "lucide-react";
+import { Package, Tag, Clock, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-
-const metrics = [
-  {
-    label: "Aktive Inserate",
-    value: "34",
-    trend: "+4 diese Woche",
-    trendVariant: "success" as const,
-    icon: FileText,
-    iconBg: "bg-primary/10 text-primary",
-  },
-  {
-    label: "Offene Leads",
-    value: "18",
-    trend: "7 neu",
-    trendVariant: "info" as const,
-    icon: UserPlus,
-    iconBg: "bg-success/10 text-success",
-  },
-  {
-    label: "Ø Standzeit",
-    value: "23 T.",
-    trend: "–3 T. ggü. Feb",
-    trendVariant: "success" as const,
-    icon: Clock,
-    iconBg: "bg-warning/10 text-warning",
-  },
-  {
-    label: "Umsatz März",
-    value: "€ 184k",
-    trend: "+18% ggü. Feb",
-    trendVariant: "success" as const,
-    icon: Euro,
-    iconBg: "bg-purple-100 text-purple-600",
-  },
-  {
-    label: "Lead-Konversion",
-    value: "34%",
-    trend: "+6% ggü. Feb",
-    trendVariant: "success" as const,
-    icon: TrendingUp,
-    iconBg: "bg-teal-100 text-teal-600",
-  },
-];
+import { useMemo } from "react";
+import { getFahrzeuge, getStandzeit } from "@/lib/fahrzeuge-store";
 
 export function MetricCards() {
+  const metrics = useMemo(() => {
+    const all = getFahrzeuge();
+    const bestand = all.filter((f) => f.status !== "verkauft");
+    const inseriert = all.filter((f) => f.status === "inseriert");
+    const standzeiten = bestand.map(getStandzeit);
+    const avgStandzeit = standzeiten.length > 0 ? Math.round(standzeiten.reduce((a, b) => a + b, 0) / standzeiten.length) : 0;
+    const maxStandzeit = standzeiten.length > 0 ? Math.max(...standzeiten) : 0;
+    const longestVehicle = bestand.find((f) => getStandzeit(f) === maxStandzeit);
+
+    return [
+      {
+        label: "Fahrzeuge im Bestand",
+        value: String(bestand.length),
+        trend: `${inseriert.length} davon inseriert`,
+        trendVariant: "info" as const,
+        icon: Package,
+        iconBg: "bg-primary/10 text-primary",
+      },
+      {
+        label: "Davon inseriert",
+        value: String(inseriert.length),
+        trend: bestand.length > 0 ? `${Math.round((inseriert.length / bestand.length) * 100)}% des Bestands` : "–",
+        trendVariant: "info" as const,
+        icon: Tag,
+        iconBg: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
+      },
+      {
+        label: "Ø Standzeit",
+        value: `${avgStandzeit} T.`,
+        trend: avgStandzeit <= 20 ? "Im grünen Bereich" : avgStandzeit <= 30 ? "Leicht erhöht" : "Zu hoch",
+        trendVariant: avgStandzeit <= 20 ? "success" as const : avgStandzeit <= 30 ? "warning" as const : "destructive" as const,
+        icon: Clock,
+        iconBg: "bg-warning/10 text-warning",
+      },
+      {
+        label: "Längste Standzeit",
+        value: `${maxStandzeit} T.`,
+        trend: longestVehicle ? `${longestVehicle.marke} ${longestVehicle.modell}` : "–",
+        trendVariant: maxStandzeit > 30 ? "destructive" as const : "info" as const,
+        icon: AlertTriangle,
+        iconBg: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400",
+      },
+    ];
+  }, []);
+
   return (
     <section>
       <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-        Unternehmensübersicht
+        Bestandsübersicht
       </div>
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-4 gap-3">
         {metrics.map((m) => (
           <div
             key={m.label}
@@ -66,7 +70,7 @@ export function MetricCards() {
                 <m.icon className="w-4 h-4" />
               </div>
             </div>
-            <Badge variant={m.trendVariant} className="w-fit text-[10px] px-2 py-0.5">
+            <Badge variant={m.trendVariant === "warning" ? "secondary" : m.trendVariant === "destructive" ? "destructive" : m.trendVariant} className="w-fit text-[10px] px-2 py-0.5">
               {m.trend}
             </Badge>
           </div>
