@@ -25,7 +25,7 @@ export interface Fahrzeug {
   gesamtkosten: number;
   empfohlenerVKPreis: number;
   fotos: string[]; // base64 or data URLs
-  status: "neu" | "aufbereitung" | "bereit" | "inseriert" | "verkauft";
+  status: "neu" | "aufbereitung" | "bereit" | "inseriert" | "pausiert" | "verkauft";
   ankaufDatum: string;
   inseratEntwurf: string;
   inseratText: string;

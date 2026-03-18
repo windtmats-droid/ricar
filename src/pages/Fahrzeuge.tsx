@@ -10,7 +10,7 @@ import { getFahrzeuge, addFahrzeug, updateFahrzeug, getStandzeit, generateId, ty
 import { FahrzeugFormModal } from "@/components/fahrzeuge/FahrzeugFormModal";
 import { InseratPanel } from "@/components/fahrzeuge/InseratPanel";
 import { VerkaufModal } from "@/components/fahrzeuge/VerkaufModal";
-import { Car, Search, ChevronDown, Edit, FileText, CheckCircle, Package, Tag, Plus, X, Pause } from "lucide-react";
+import { Car, Search, ChevronDown, Edit, FileText, CheckCircle, Package, Tag, Plus, Pause } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const statusConfig: Record<string, { label: string; className: string }> = {
