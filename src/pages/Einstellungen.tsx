@@ -4,6 +4,7 @@ import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { IntegrationenSection } from "@/components/einstellungen/IntegrationenSection";
 import { TeamSection } from "@/components/einstellungen/TeamSection";
 import { AutoScanSection } from "@/components/einstellungen/AutoScanSection";
+import { ErscheinungsbildSection } from "@/components/einstellungen/ErscheinungsbildSection";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
