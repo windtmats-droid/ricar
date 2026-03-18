@@ -193,9 +193,8 @@ const Verkauf = () => {
                         <td className="text-center px-3 py-3">
                           <span className={cn("font-medium", standzeitColor(sd))}>{sd} Tage</span>
                         </td>
-                        <td className="px-3 py-3 text-foreground">{f.kaeuferName || "–"}</td>
+                        <td className="px-3 py-3 text-foreground">{getVerkaeufername(f.verkaeuferId)}</td>
                         <td className="px-3 py-3 text-muted-foreground">{f.verkaufsDatum ? new Date(f.verkaufsDatum).toLocaleDateString("de-DE") : "–"}</td>
-                        <td className="text-center px-3 py-3">{zahlungsartBadge(f.zahlungsart)}</td>
                         <td className="text-right px-4 py-3">
                           <div className="flex justify-end gap-1.5">
                             <Button variant="ghost" size="sm" className="h-7 text-[11px] gap-1" onClick={() => setDetailFahrzeug(f)}>
