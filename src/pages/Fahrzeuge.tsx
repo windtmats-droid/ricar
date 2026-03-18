@@ -2,14 +2,13 @@ import { useState, useMemo } from "react";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { getFahrzeuge, updateFahrzeug, getStandzeit, type Fahrzeug } from "@/lib/fahrzeuge-store";
-import { Car, Search, ChevronDown, Edit, FileText, CheckCircle, Package, Tag } from "lucide-react";
+import { getFahrzeuge, addFahrzeug, updateFahrzeug, getStandzeit, generateId, type Fahrzeug } from "@/lib/fahrzeuge-store";
+import { FahrzeugFormModal } from "@/components/fahrzeuge/FahrzeugFormModal";
+import { InseratPanel } from "@/components/fahrzeuge/InseratPanel";
+import { Car, Search, ChevronDown, Edit, FileText, CheckCircle, Package, Tag, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const statusConfig: Record<string, { label: string; className: string }> = {
@@ -32,11 +31,19 @@ const Fahrzeuge = () => {
   const [tab, setTab] = useState("bestand");
   const [search, setSearch] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
-  const [inseratModal, setInseratModal] = useState<Fahrzeug | null>(null);
-  const [inseratText, setInseratText] = useState("");
-  const [inseratPreis, setInseratPreis] = useState("");
+
+  // Form modal state
+  const [formModalOpen, setFormModalOpen] = useState(false);
+  const [formModalFahrzeug, setFormModalFahrzeug] = useState<Fahrzeug | null>(null);
+  const [formSaving, setFormSaving] = useState(false);
+
+  // Inserat panel state
+  const [inseratOpen, setInseratOpen] = useState(false);
+  const [inseratFahrzeug, setInseratFahrzeug] = useState<Fahrzeug | null>(null);
+  const [inseratIsNew, setInseratIsNew] = useState(false);
 
   const allFahrzeuge = useMemo(() => getFahrzeuge(), [refreshKey]);
+  const refresh = () => setRefreshKey((k) => k + 1);
 
   const bestand = useMemo(() => {
     return allFahrzeuge
@@ -48,11 +55,7 @@ const Fahrzeuge = () => {
       });
   }, [allFahrzeuge, search]);
 
-  const inserierte = useMemo(() => {
-    return allFahrzeuge.filter((f) => f.status === "inseriert");
-  }, [allFahrzeuge]);
-
-  const refresh = () => setRefreshKey((k) => k + 1);
+  const inserierte = useMemo(() => allFahrzeuge.filter((f) => f.status === "inseriert"), [allFahrzeuge]);
 
   const handleStatusChange = (id: string, status: Fahrzeug["status"]) => {
     updateFahrzeug(id, { status });
@@ -60,28 +63,74 @@ const Fahrzeuge = () => {
     toast({ title: "Status aktualisiert" });
   };
 
-  const openInseratModal = (f: Fahrzeug) => {
-    setInseratModal(f);
-    setInseratText(f.inseratEntwurf || f.inseratText || "");
-    setInseratPreis(String(f.inseratPreis || f.empfohlenerVKPreis || ""));
-  };
-
-  const publishInserat = () => {
-    if (!inseratModal) return;
-    updateFahrzeug(inseratModal.id, {
-      status: "inseriert",
-      inseratText: inseratText,
-      inseratPreis: parseFloat(inseratPreis) || 0,
-    });
-    setInseratModal(null);
-    refresh();
-    toast({ title: "Inserat veröffentlicht", description: `${inseratModal.marke} ${inseratModal.modell} ist jetzt inseriert.` });
-  };
-
   const markAsSold = (id: string) => {
     updateFahrzeug(id, { status: "verkauft", verkaufsDatum: new Date().toISOString().split("T")[0] });
     refresh();
     toast({ title: "Als verkauft markiert" });
+  };
+
+  // --- Form Modal handlers ---
+  const openAddModal = () => { setFormModalFahrzeug(null); setFormModalOpen(true); };
+  const openEditModal = (f: Fahrzeug) => { setFormModalFahrzeug(f); setFormModalOpen(true); };
+
+  const handleFormSave = (data: any) => {
+    setFormSaving(true);
+    if (data.id) {
+      updateFahrzeug(data.id, data);
+      toast({ title: "Fahrzeug aktualisiert", description: `${data.marke} ${data.modell} gespeichert.` });
+    } else {
+      const fahrzeug: Fahrzeug = {
+        ...data,
+        id: generateId(),
+        status: "neu",
+        ankaufDatum: new Date().toISOString().split("T")[0],
+        inseratEntwurf: "",
+        inseratText: "",
+        inseratPreis: data.empfohlenerVKPreis || 0,
+        verkaufsDatum: "",
+      };
+      addFahrzeug(fahrzeug);
+      toast({ title: "Fahrzeug hinzugefügt", description: `${data.marke} ${data.modell} wurde in den Bestand aufgenommen.` });
+    }
+    setFormSaving(false);
+    setFormModalOpen(false);
+    refresh();
+  };
+
+  // --- Inserat Panel handlers ---
+  const openInseratFromBestand = (f: Fahrzeug) => { setInseratFahrzeug(f); setInseratIsNew(false); setInseratOpen(true); };
+  const openInseratEdit = (f: Fahrzeug) => { setInseratFahrzeug(f); setInseratIsNew(false); setInseratOpen(true); };
+  const openNewInserat = () => { setInseratFahrzeug(null); setInseratIsNew(true); setInseratOpen(true); };
+
+  const handleInseratPublish = (data: Partial<Fahrzeug> & { marke: string; modell: string }) => {
+    if (data.id) {
+      updateFahrzeug(data.id, { ...data, status: "inseriert" });
+      toast({ title: "Inserat aktualisiert", description: `${data.marke} ${data.modell}` });
+    } else {
+      const fahrzeug: Fahrzeug = {
+        id: generateId(),
+        marke: data.marke,
+        modell: data.modell,
+        typ: "", baujahr: data.baujahr || "", erstzulassung: "",
+        km: data.km || "", farbe: data.farbe || "", fin: "", kennzeichen: "",
+        kraftstoff: data.kraftstoff || "", getriebe: data.getriebe || "",
+        huBis: "", tuevBis: "", zustand: "Gut", notizen: "",
+        einkaufspreis: 0, aufbereitungskosten: 0, transportkosten: 0, sonstigeKosten: 0,
+        marge: 15, gesamtkosten: 0, empfohlenerVKPreis: data.inseratPreis || 0,
+        fotos: data.fotos || [],
+        status: "inseriert",
+        ankaufDatum: new Date().toISOString().split("T")[0],
+        inseratEntwurf: "",
+        inseratText: data.inseratText || "",
+        inseratPreis: data.inseratPreis || 0,
+        verkaufsDatum: "",
+      };
+      addFahrzeug(fahrzeug);
+      toast({ title: "Inserat veröffentlicht", description: `${data.marke} ${data.modell} ist jetzt inseriert.` });
+    }
+    setInseratOpen(false);
+    setTab("inserate");
+    refresh();
   };
 
   return (
@@ -102,16 +151,29 @@ const Fahrzeuge = () => {
         </div>
 
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="mb-4">
-            <TabsTrigger value="bestand" className="gap-1.5 text-xs">
-              <Package className="w-3.5 h-3.5" /> Bestand
-              <span className="ml-1 text-[10px] bg-muted-foreground/10 px-1.5 rounded-full">{bestand.length}</span>
-            </TabsTrigger>
-            <TabsTrigger value="inserate" className="gap-1.5 text-xs">
-              <Tag className="w-3.5 h-3.5" /> Inserate
-              <span className="ml-1 text-[10px] bg-muted-foreground/10 px-1.5 rounded-full">{inserierte.length}</span>
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex items-center justify-between mb-4">
+            <TabsList>
+              <TabsTrigger value="bestand" className="gap-1.5 text-xs">
+                <Package className="w-3.5 h-3.5" /> Bestand
+                <span className="ml-1 text-[10px] bg-muted-foreground/10 px-1.5 rounded-full">{bestand.length}</span>
+              </TabsTrigger>
+              <TabsTrigger value="inserate" className="gap-1.5 text-xs">
+                <Tag className="w-3.5 h-3.5" /> Inserate
+                <span className="ml-1 text-[10px] bg-muted-foreground/10 px-1.5 rounded-full">{inserierte.length}</span>
+              </TabsTrigger>
+            </TabsList>
+
+            {tab === "bestand" && (
+              <Button size="sm" className="gap-1.5 text-xs" onClick={openAddModal}>
+                <Plus className="w-3.5 h-3.5" /> Fahrzeug hinzufügen
+              </Button>
+            )}
+            {tab === "inserate" && (
+              <Button size="sm" className="gap-1.5 text-xs" onClick={openNewInserat}>
+                <Plus className="w-3.5 h-3.5" /> Neues Inserat
+              </Button>
+            )}
+          </div>
 
           {/* BESTAND TAB */}
           <TabsContent value="bestand">
@@ -119,7 +181,7 @@ const Fahrzeuge = () => {
               <div className="text-center py-16 text-muted-foreground">
                 <Car className="w-10 h-10 mx-auto mb-3 opacity-30" />
                 <p className="text-sm">Noch keine Fahrzeuge im Bestand.</p>
-                <p className="text-xs mt-1">Gehe zu <a href="/ankauf" className="text-primary underline">Ankauf</a> um ein Fahrzeug hinzuzufügen.</p>
+                <p className="text-xs mt-1">Klicke auf „Fahrzeug hinzufügen" oder gehe zu <a href="/ankauf" className="text-primary underline">Ankauf</a>.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -128,7 +190,6 @@ const Fahrzeuge = () => {
                   const sc = statusConfig[f.status] || statusConfig.neu;
                   return (
                     <div key={f.id} className="bg-card border border-border rounded-xl overflow-hidden">
-                      {/* Photo */}
                       <div className="h-36 bg-muted flex items-center justify-center">
                         {f.fotos?.[0] ? (
                           <img src={f.fotos[0]} alt="" className="w-full h-full object-cover" />
@@ -163,7 +224,7 @@ const Fahrzeuge = () => {
                         <div className="flex gap-2">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="outline" size="sm" className="text-xs flex-1 gap-1">
+                              <Button variant="outline" size="sm" className="text-xs gap-1">
                                 Status <ChevronDown className="w-3 h-3" />
                               </Button>
                             </DropdownMenuTrigger>
@@ -173,8 +234,11 @@ const Fahrzeuge = () => {
                               <DropdownMenuItem onClick={() => handleStatusChange(f.id, "bereit")}>Bereit</DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
-                          <Button size="sm" className="text-xs flex-1 gap-1" onClick={() => openInseratModal(f)}>
-                            <Edit className="w-3 h-3" /> Inserat erstellen
+                          <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => openEditModal(f)}>
+                            <Edit className="w-3 h-3" /> Bearbeiten
+                          </Button>
+                          <Button size="sm" className="text-xs gap-1 flex-1" onClick={() => openInseratFromBestand(f)}>
+                            <Tag className="w-3 h-3" /> Inserat
                           </Button>
                         </div>
                       </div>
@@ -191,7 +255,7 @@ const Fahrzeuge = () => {
               <div className="text-center py-16 text-muted-foreground">
                 <Tag className="w-10 h-10 mx-auto mb-3 opacity-30" />
                 <p className="text-sm">Noch keine Inserate erstellt.</p>
-                <p className="text-xs mt-1">Erstelle ein Inserat aus dem Bestand-Tab.</p>
+                <p className="text-xs mt-1">Erstelle ein Inserat aus dem Bestand oder klicke „Neues Inserat".</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -211,7 +275,7 @@ const Fahrzeuge = () => {
                       <div className="text-base font-bold text-foreground mb-3">€ {(f.inseratPreis || f.empfohlenerVKPreis).toLocaleString("de-DE")}</div>
 
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="text-xs flex-1 gap-1" onClick={() => openInseratModal(f)}>
+                        <Button variant="outline" size="sm" className="text-xs flex-1 gap-1" onClick={() => openInseratEdit(f)}>
                           <Edit className="w-3 h-3" /> Bearbeiten
                         </Button>
                         <Button variant="outline" size="sm" className="text-xs gap-1">
@@ -229,29 +293,22 @@ const Fahrzeuge = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Inserat Modal */}
-        <Dialog open={!!inseratModal} onOpenChange={(o) => !o && setInseratModal(null)}>
-          <DialogContent className="max-w-xl">
-            <DialogHeader>
-              <DialogTitle>Inserat erstellen — {inseratModal?.marke} {inseratModal?.modell}</DialogTitle>
-              <DialogDescription>KI-generierten Text prüfen, anpassen und veröffentlichen.</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label className="text-xs">Inseratstext</Label>
-                <Textarea value={inseratText} onChange={(e) => setInseratText(e.target.value)} rows={8} className="mt-1 text-xs" />
-              </div>
-              <div>
-                <Label className="text-xs">Verkaufspreis (€)</Label>
-                <Input type="number" value={inseratPreis} onChange={(e) => setInseratPreis(e.target.value)} className="mt-1" />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setInseratModal(null)}>Abbrechen</Button>
-              <Button onClick={publishInserat}>Veröffentlichen</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        {/* Fahrzeug Form Modal (add/edit) */}
+        <FahrzeugFormModal
+          open={formModalOpen}
+          onClose={() => setFormModalOpen(false)}
+          onSave={handleFormSave}
+          fahrzeug={formModalFahrzeug}
+          saving={formSaving}
+        />
+
+        {/* Inserat Slide-over Panel */}
+        <InseratPanel
+          open={inseratOpen}
+          onClose={() => setInseratOpen(false)}
+          onPublish={handleInseratPublish}
+          fahrzeug={inseratFahrzeug}
+        />
       </main>
     </div>
   );
