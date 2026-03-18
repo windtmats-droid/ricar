@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -203,6 +204,19 @@ const Fahrzeuge = () => {
   // Active filter counts
   const bFilterCount = [bStatus !== "alle", bMarke !== "alle", bKraftstoff !== "alle", bGetriebe !== "alle"].filter(Boolean).length;
   const iFilterCount = [iStatus !== "alle", iMarke !== "alle", iKraftstoff !== "alle", iPreis !== "alle"].filter(Boolean).length;
+
+  const navigate = useNavigate();
+
+  const handleDokumentErstellen = (f: Fahrzeug) => {
+    localStorage.setItem("prefillFahrzeug", JSON.stringify({
+      marke: f.marke, modell: f.modell, typ: f.typ, baujahr: f.baujahr,
+      erstzulassung: f.erstzulassung, km: f.km, farbe: f.farbe, fin: f.fin,
+      kennzeichen: f.kennzeichen, kraftstoff: f.kraftstoff, getriebe: f.getriebe,
+      huBis: f.huBis, tuevBis: f.tuevBis,
+      preis: f.inseratPreis || f.empfohlenerVKPreis || 0,
+    }));
+    navigate("/dokumente");
+  };
 
   const resetBestandFilters = () => { setBSearch(""); setBStatus("alle"); setBMarke("alle"); setBKraftstoff("alle"); setBGetriebe("alle"); setBSort("neueste"); };
   const resetInserateFilters = () => { setISearch(""); setIStatus("alle"); setIMarke("alle"); setIKraftstoff("alle"); setIPreis("alle"); setISort("neueste"); };
@@ -419,9 +433,12 @@ const Fahrzeuge = () => {
                           </div>
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => openEditModal(f)}>
                             <Edit className="w-3 h-3" /> Bearbeiten
+                          </Button>
+                          <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => handleDokumentErstellen(f)}>
+                            <FileText className="w-3 h-3" /> Dokument
                           </Button>
                           <Button size="sm" className="text-xs gap-1 flex-1" onClick={() => openInseratFromBestand(f)}>
                             <Tag className="w-3 h-3" /> Inserat
@@ -527,12 +544,12 @@ const Fahrzeuge = () => {
                         <div className="text-xs text-foreground/80 line-clamp-3 mb-3">{f.inseratText || f.inseratEntwurf}</div>
                         <div className="text-base font-bold text-foreground mb-3">€ {(f.inseratPreis || f.empfohlenerVKPreis || 0).toLocaleString("de-DE")}</div>
 
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           <Button variant="outline" size="sm" className="text-xs flex-1 gap-1" onClick={() => openInseratEdit(f)}>
                             <Edit className="w-3 h-3" /> Bearbeiten
                           </Button>
-                          <Button variant="outline" size="sm" className="text-xs gap-1">
-                            <FileText className="w-3 h-3" /> PDF
+                          <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => handleDokumentErstellen(f)}>
+                            <FileText className="w-3 h-3" /> Dokument
                           </Button>
                           <Button variant="destructive" size="sm" className="text-xs gap-1" onClick={() => openVerkaufModal(f)}>
                             <CheckCircle className="w-3 h-3" /> Verkauft
