@@ -21,6 +21,7 @@ import ResetPassword from "./pages/ResetPassword.tsx";
 import Analytics from "./pages/Analytics.tsx";
 import Kalkulation from "./pages/Kalkulation.tsx";
 import Dokumente from "./pages/Dokumente.tsx";
+import Chat from "./pages/Chat.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/kalkulation" element={<Kalkulation />} />
             <Route path="/dokumente" element={<Dokumente />} />
+            <Route path="/chat" element={<Chat />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

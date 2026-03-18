@@ -11,6 +11,7 @@ import {
   Mail,
   Settings,
   LogOut,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -22,6 +23,12 @@ const navSections = [
     label: "Übersicht",
     items: [
       { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+    ],
+  },
+  {
+    label: "Künstliche Intelligenz",
+    items: [
+      { icon: Sparkles, label: "KI-Assistent", path: "/chat" },
     ],
   },
   {
