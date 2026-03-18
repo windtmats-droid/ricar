@@ -275,11 +275,8 @@ const Verkauf = () => {
                     <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
                       {[
                         ["Verkaufspreis", `€ ${(df.verkaufspreis || 0).toLocaleString("de-DE")}`],
-                        ["Käufer", df.kaeuferName || "–"],
-                        ["Telefon", df.kaeuferTelefon || "–"],
-                        ["E-Mail", df.kaeuferEmail || "–"],
+                        ["Verkäufer", getVerkaeufername(df.verkaeuferId)],
                         ["Datum", df.verkaufsDatum ? new Date(df.verkaufsDatum).toLocaleDateString("de-DE") : "–"],
-                        ["Zahlungsart", df.zahlungsart || "–"],
                       ].map(([l, v]) => (
                         <div key={l} className="flex justify-between py-1 border-b border-border/50">
                           <span className="text-muted-foreground">{l}</span>
