@@ -4,11 +4,13 @@ import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { IntegrationenSection } from "@/components/einstellungen/IntegrationenSection";
 import { TeamSection } from "@/components/einstellungen/TeamSection";
 import { AutoScanSection } from "@/components/einstellungen/AutoScanSection";
+import { ErscheinungsbildSection } from "@/components/einstellungen/ErscheinungsbildSection";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 const TABS = [
+  { key: "erscheinungsbild", label: "Erscheinungsbild" },
   { key: "integrationen", label: "Integrationen" },
   { key: "team", label: "Team & Rollen" },
   { key: "autoscan", label: "Auto-Scan" },
@@ -17,7 +19,7 @@ const TABS = [
 type TabKey = typeof TABS[number]["key"];
 
 const Einstellungen = () => {
-  const [activeTab, setActiveTab] = useState<TabKey>("integrationen");
+  const [activeTab, setActiveTab] = useState<TabKey>("erscheinungsbild");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -85,6 +87,7 @@ const Einstellungen = () => {
           </div>
 
           <div className="flex-1 min-w-0">
+            {activeTab === "erscheinungsbild" && <ErscheinungsbildSection />}
             {activeTab === "integrationen" && (
               <IntegrationenSection
                 mobilede={{ user: settings?.mobilede_user || "", pw: settings?.mobilede_pw_encrypted || "", kundennr: settings?.mobilede_kundennr || "" }}
