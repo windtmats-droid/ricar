@@ -32,10 +32,7 @@ export interface Fahrzeug {
   inseratPreis: number;
   verkaufsDatum: string;
   verkaufspreis?: number;
-  kaeuferName?: string;
-  kaeuferTelefon?: string;
-  kaeuferEmail?: string;
-  zahlungsart?: string;
+  verkaeuferId?: string;
   verkaufsNotizen?: string;
 }
 

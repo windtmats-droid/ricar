@@ -5,19 +5,32 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle, Loader2, Settings } from "lucide-react";
 import { type Fahrzeug } from "@/lib/fahrzeuge-store";
+import { Link } from "react-router-dom";
+
+export interface TeamMember {
+  id: string;
+  vorname: string;
+  nachname: string;
+  rolle: string;
+  email: string;
+  telefon: string;
+}
+
+export function getTeam(): TeamMember[] {
+  try {
+    return JSON.parse(localStorage.getItem("team") || "[]");
+  } catch { return []; }
+}
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onConfirm: (data: {
     verkaufspreis: number;
-    kaeuferName: string;
-    kaeuferTelefon: string;
-    kaeuferEmail: string;
+    verkaeuferId: string;
     verkaufsDatum: string;
-    zahlungsart: string;
     verkaufsNotizen: string;
   }) => void;
   fahrzeug: Fahrzeug | null;
@@ -25,23 +38,21 @@ interface Props {
 
 export function VerkaufModal({ open, onClose, onConfirm, fahrzeug }: Props) {
   const [verkaufspreis, setVerkaufspreis] = useState("");
-  const [kaeuferName, setKaeuferName] = useState("");
-  const [kaeuferTelefon, setKaeuferTelefon] = useState("");
-  const [kaeuferEmail, setKaeuferEmail] = useState("");
+  const [verkaeuferId, setVerkaeuferId] = useState("");
   const [verkaufsDatum, setVerkaufsDatum] = useState("");
-  const [zahlungsart, setZahlungsart] = useState("");
   const [notizen, setNotizen] = useState("");
   const [saving, setSaving] = useState(false);
+  const [team, setTeam] = useState<TeamMember[]>([]);
 
   useEffect(() => {
-    if (open && fahrzeug) {
-      setVerkaufspreis(String(fahrzeug.inseratPreis || fahrzeug.empfohlenerVKPreis || ""));
-      setKaeuferName("");
-      setKaeuferTelefon("");
-      setKaeuferEmail("");
-      setVerkaufsDatum(new Date().toISOString().split("T")[0]);
-      setZahlungsart("");
-      setNotizen("");
+    if (open) {
+      setTeam(getTeam());
+      if (fahrzeug) {
+        setVerkaufspreis(String(fahrzeug.inseratPreis || fahrzeug.empfohlenerVKPreis || ""));
+        setVerkaeuferId("");
+        setVerkaufsDatum(new Date().toISOString().split("T")[0]);
+        setNotizen("");
+      }
     }
   }, [open, fahrzeug]);
 
@@ -49,11 +60,8 @@ export function VerkaufModal({ open, onClose, onConfirm, fahrzeug }: Props) {
     setSaving(true);
     onConfirm({
       verkaufspreis: parseFloat(verkaufspreis) || 0,
-      kaeuferName,
-      kaeuferTelefon,
-      kaeuferEmail,
+      verkaeuferId,
       verkaufsDatum,
-      zahlungsart,
       verkaufsNotizen: notizen,
     });
     setSaving(false);
@@ -72,48 +80,35 @@ export function VerkaufModal({ open, onClose, onConfirm, fahrzeug }: Props) {
         </DialogHeader>
 
         <div className="space-y-3 mt-2">
+          {/* Verkäufer */}
           <div>
-            <Label className="text-[11px]">Verkaufspreis (€) *</Label>
-            <Input
-              type="number"
-              value={verkaufspreis}
-              onChange={(e) => setVerkaufspreis(e.target.value)}
-              className="mt-1 h-8 text-xs"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5">
-            <div>
-              <Label className="text-[11px]">Käufer Name</Label>
-              <Input value={kaeuferName} onChange={(e) => setKaeuferName(e.target.value)} className="mt-1 h-8 text-xs" />
-            </div>
-            <div>
-              <Label className="text-[11px]">Käufer Telefon</Label>
-              <Input value={kaeuferTelefon} onChange={(e) => setKaeuferTelefon(e.target.value)} className="mt-1 h-8 text-xs" />
-            </div>
-          </div>
-
-          <div>
-            <Label className="text-[11px]">Käufer E-Mail</Label>
-            <Input type="email" value={kaeuferEmail} onChange={(e) => setKaeuferEmail(e.target.value)} className="mt-1 h-8 text-xs" />
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5">
-            <div>
-              <Label className="text-[11px]">Verkaufsdatum</Label>
-              <Input type="date" value={verkaufsDatum} onChange={(e) => setVerkaufsDatum(e.target.value)} className="mt-1 h-8 text-xs" />
-            </div>
-            <div>
-              <Label className="text-[11px]">Zahlungsart</Label>
-              <Select value={zahlungsart} onValueChange={setZahlungsart}>
-                <SelectTrigger className="mt-1 h-8 text-xs"><SelectValue placeholder="Wählen" /></SelectTrigger>
+            <Label className="text-[11px]">Verkäufer</Label>
+            {team.length === 0 ? (
+              <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">
+                <Settings className="w-3.5 h-3.5" />
+                <span>Kein Verkäufer angelegt.</span>
+                <Link to="/einstellungen" className="text-primary hover:underline ml-1">In Einstellungen anlegen →</Link>
+              </div>
+            ) : (
+              <Select value={verkaeuferId} onValueChange={setVerkaeuferId}>
+                <SelectTrigger className="mt-1 h-8 text-xs"><SelectValue placeholder="Verkäufer wählen" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Bar">Bar</SelectItem>
-                  <SelectItem value="Überweisung">Überweisung</SelectItem>
-                  <SelectItem value="Finanzierung">Finanzierung</SelectItem>
+                  {team.map((m) => (
+                    <SelectItem key={m.id} value={m.id}>{m.vorname} {m.nachname} — {m.rolle}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-            </div>
+            )}
+          </div>
+
+          <div>
+            <Label className="text-[11px]">Verkaufspreis (€) *</Label>
+            <Input type="number" value={verkaufspreis} onChange={(e) => setVerkaufspreis(e.target.value)} className="mt-1 h-8 text-xs" />
+          </div>
+
+          <div>
+            <Label className="text-[11px]">Verkaufsdatum</Label>
+            <Input type="date" value={verkaufsDatum} onChange={(e) => setVerkaufsDatum(e.target.value)} className="mt-1 h-8 text-xs" />
           </div>
 
           <div>
