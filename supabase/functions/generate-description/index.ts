@@ -31,13 +31,24 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Parse Claude API response and extract the text
+    // Parse Claude API response and extract the text from content[0].text
     let beschreibung = "";
     try {
       const parsed = JSON.parse(raw);
-      beschreibung = parsed?.content?.[0]?.text || "";
-      if (!beschreibung && typeof parsed === "string") {
+      console.log("Parsed keys:", Object.keys(parsed));
+      
+      // Claude API format: { content: [{ type: "text", text: "..." }] }
+      if (parsed?.content && Array.isArray(parsed.content) && parsed.content.length > 0) {
+        beschreibung = parsed.content[0].text || "";
+      } else if (typeof parsed === "string") {
         beschreibung = parsed;
+      } else if (parsed?.beschreibung) {
+        beschreibung = parsed.beschreibung;
+      }
+      
+      // Strip markdown code fences if present (```json ... ``` or ``` ... ```)
+      if (beschreibung.startsWith("```")) {
+        beschreibung = beschreibung.replace(/^```(?:json|text)?\s*\n?/, "").replace(/\n?```\s*$/, "").trim();
       }
     } catch {
       // If it's not JSON, use raw text directly
