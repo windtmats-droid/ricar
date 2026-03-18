@@ -7,16 +7,19 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 
 interface ScanResult {
-  marktdurchschnitt?: number;
-  durchschnittspreis?: number;
-  minimum?: number;
-  min_preis?: number;
-  maximum?: number;
-  max_preis?: number;
-  anzahl?: number;
-  anzahl_angebote?: number;
-  bewertung?: string;
-  empfehlung?: string;
+  markt?: {
+    durchschnitt?: number;
+    minimum?: number;
+    maximum?: number;
+    anzahl?: number;
+    preise?: number[];
+  };
+  analyse?: {
+    bewertung?: string;
+    empfehlung?: string;
+    marktpreis?: number;
+    differenz_pct?: number;
+  };
   [key: string]: any;
 }
 
