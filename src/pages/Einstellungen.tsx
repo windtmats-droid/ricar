@@ -19,7 +19,7 @@ const TABS = [
 type TabKey = typeof TABS[number]["key"];
 
 const Einstellungen = () => {
-  const [activeTab, setActiveTab] = useState<TabKey>("integrationen");
+  const [activeTab, setActiveTab] = useState<TabKey>("erscheinungsbild");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
