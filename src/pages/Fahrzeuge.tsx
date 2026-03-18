@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getFahrzeuge, addFahrzeug, updateFahrzeug, getStandzeit, generateId, type Fahrzeug } from "@/lib/fahrzeuge-store";
 import { FahrzeugFormModal } from "@/components/fahrzeuge/FahrzeugFormModal";
 import { InseratPanel } from "@/components/fahrzeuge/InseratPanel";
+import { VerkaufModal } from "@/components/fahrzeuge/VerkaufModal";
 import { Car, Search, ChevronDown, Edit, FileText, CheckCircle, Package, Tag, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
