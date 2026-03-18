@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   Car,
   ShoppingCart,
+  TrendingUp,
   Users,
   ScanSearch,
   BarChart3,
