@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Mail, Phone, Send, Check, Archive, Sparkles } from "lucide-react";
+import { Mail, Phone, Send, Check, Archive, Sparkles, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import type { Anfrage } from "@/data/anfragen";
 
 const sourceColor: Record<string, string> = {
@@ -14,6 +15,18 @@ const sourceColor: Record<string, string> = {
   "AutoScout24": "bg-warning/15 text-warning",
   "E-Mail": "bg-muted text-muted-foreground",
 };
+
+const bewertungBadge: Record<string, string> = {
+  "Hoch": "bg-destructive/15 text-destructive border-destructive/30",
+  "Mittel": "bg-warning/15 text-warning border-warning/30",
+  "Niedrig": "bg-success/15 text-success border-success/30",
+};
+
+interface KiEvaluation {
+  bewertung: string;
+  begruendung: string;
+  antwort: string;
+}
 
 interface Props {
   anfrage: Anfrage;
@@ -23,15 +36,70 @@ interface Props {
 
 export function AnfrageDetail({ anfrage: a, onMarkRead, onArchive }: Props) {
   const [antwort, setAntwort] = useState(a.kiAntwort);
+  const [kiEval, setKiEval] = useState<KiEvaluation | null>(null);
+  const [kiLoading, setKiLoading] = useState(false);
+  const [kiError, setKiError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Reset antwort when anfrage changes
+  // Reset state when anfrage changes
   const [prevId, setPrevId] = useState(a.id);
   if (a.id !== prevId) {
     setPrevId(a.id);
     setAntwort(a.kiAntwort);
+    setKiEval(null);
+    setKiError(null);
   }
+
+  // Call evaluate-message edge function when anfrage changes
+  useEffect(() => {
+    let cancelled = false;
+
+    const evaluate = async () => {
+      setKiLoading(true);
+      setKiError(null);
+      setKiEval(null);
+
+      try {
+        console.log("Evaluating message:", a.id);
+        const { data, error } = await supabase.functions.invoke("evaluate-message", {
+          body: { anfragetext: a.fullMessage },
+        });
+
+        if (cancelled) return;
+
+        if (error) throw error;
+
+        console.log("Evaluate response:", data);
+
+        // Parse content[0].text which is a JSON string
+        let parsed: KiEvaluation;
+        if (data?.content?.[0]?.text) {
+          parsed = JSON.parse(data.content[0].text);
+        } else if (data?.bewertung) {
+          // Direct object response
+          parsed = data as KiEvaluation;
+        } else {
+          throw new Error("Unerwartetes Antwortformat");
+        }
+
+        setKiEval(parsed);
+        if (parsed.antwort) {
+          setAntwort(parsed.antwort);
+        }
+      } catch (err: any) {
+        console.error("KI-Bewertung Fehler:", err);
+        if (!cancelled) {
+          setKiError(err.message || "Fehler bei der KI-Bewertung");
+        }
+      } finally {
+        if (!cancelled) setKiLoading(false);
+      }
+    };
+
+    evaluate();
+    return () => { cancelled = true; };
+  }, [a.id, a.fullMessage]);
 
   const handleSend = () => {
     toast({ title: "Antwort gesendet", description: `Antwort an ${a.sender} wurde versendet.` });
@@ -62,43 +130,81 @@ export function AnfrageDetail({ anfrage: a, onMarkRead, onArchive }: Props) {
         </div>
       </div>
 
-      {/* KI-Bewertung Card */}
+      {/* Live KI-Bewertung Card */}
       <div className="bg-card border border-border rounded-[10px] p-4">
         <div className="flex items-center gap-2 mb-3">
           <h3 className="text-sm font-medium text-foreground">KI-Bewertung</h3>
           <Badge variant="info" className="text-[9px] px-1.5 py-0">KI</Badge>
+          {kiLoading && (
+            <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <Loader2 className="w-3 h-3 animate-spin" /> Wird analysiert…
+            </span>
+          )}
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          <div>
-            <div className="text-[11px] text-muted-foreground mb-1">Kaufwahrscheinlichkeit</div>
-            <div className={cn("text-lg font-medium", kb.kaufwahrscheinlichkeit.color)}>
-              {kb.kaufwahrscheinlichkeit.wert}
-            </div>
-            <div className="text-[10px] text-muted-foreground mt-0.5">{kb.kaufwahrscheinlichkeit.text}</div>
+        {kiLoading && (
+          <div className="flex items-center justify-center py-6">
+            <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
           </div>
-          <div>
-            <div className="text-[11px] text-muted-foreground mb-1">Dringlichkeit</div>
-            <div className={cn("text-lg font-medium", kb.dringlichkeit.color)}>
-              {kb.dringlichkeit.wert}
-            </div>
-            <div className="text-[10px] text-muted-foreground mt-0.5">{kb.dringlichkeit.text}</div>
-          </div>
-          <div>
-            <div className="text-[11px] text-muted-foreground mb-1">Preisbereitschaft</div>
-            <div className={cn("text-lg font-medium", kb.preisbereitschaft.color)}>
-              {kb.preisbereitschaft.wert}
-            </div>
-            <div className="text-[10px] text-muted-foreground mt-0.5">{kb.preisbereitschaft.text}</div>
-          </div>
-        </div>
+        )}
 
-        <Separator className="my-3" />
+        {kiError && (
+          <div className="text-sm text-destructive bg-destructive/10 rounded-md p-3">
+            Fehler: {kiError}
+          </div>
+        )}
 
-        <div className="flex items-start gap-1.5">
-          <span className="text-[12px] font-semibold text-foreground shrink-0">KI-Empfehlung:</span>
-          <span className="text-[12px] text-success">{kb.empfehlung}</span>
-        </div>
+        {kiEval && !kiLoading && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-muted-foreground">Bewertung:</span>
+              <span className={cn(
+                "text-[11px] font-semibold px-2.5 py-0.5 rounded-full border",
+                bewertungBadge[kiEval.bewertung] || "bg-muted text-muted-foreground border-border"
+              )}>
+                {kiEval.bewertung}
+              </span>
+            </div>
+            <div>
+              <span className="text-[11px] text-muted-foreground">Begründung:</span>
+              <p className="text-[12px] text-foreground mt-1 leading-relaxed">{kiEval.begruendung}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Fallback: static data when no live eval */}
+        {!kiEval && !kiLoading && !kiError && (
+          <>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <div className="text-[11px] text-muted-foreground mb-1">Kaufwahrscheinlichkeit</div>
+                <div className={cn("text-lg font-medium", kb.kaufwahrscheinlichkeit.color)}>
+                  {kb.kaufwahrscheinlichkeit.wert}
+                </div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">{kb.kaufwahrscheinlichkeit.text}</div>
+              </div>
+              <div>
+                <div className="text-[11px] text-muted-foreground mb-1">Dringlichkeit</div>
+                <div className={cn("text-lg font-medium", kb.dringlichkeit.color)}>
+                  {kb.dringlichkeit.wert}
+                </div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">{kb.dringlichkeit.text}</div>
+              </div>
+              <div>
+                <div className="text-[11px] text-muted-foreground mb-1">Preisbereitschaft</div>
+                <div className={cn("text-lg font-medium", kb.preisbereitschaft.color)}>
+                  {kb.preisbereitschaft.wert}
+                </div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">{kb.preisbereitschaft.text}</div>
+              </div>
+            </div>
+            <Separator className="my-3" />
+            <div className="flex items-start gap-1.5">
+              <span className="text-[12px] font-semibold text-foreground shrink-0">KI-Empfehlung:</span>
+              <span className="text-[12px] text-success">{kb.empfehlung}</span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Anfrage Card */}
@@ -156,7 +262,9 @@ export function AnfrageDetail({ anfrage: a, onMarkRead, onArchive }: Props) {
         <div className="flex items-center gap-2 mb-3">
           <h3 className="text-sm font-medium text-foreground">KI-Antwort</h3>
           <Badge variant="info" className="text-[9px] px-1.5 py-0">KI</Badge>
-          <span className="text-[10px] text-muted-foreground">automatisch generiert</span>
+          <span className="text-[10px] text-muted-foreground">
+            {kiEval ? "live generiert" : "automatisch generiert"}
+          </span>
         </div>
 
         <Textarea
