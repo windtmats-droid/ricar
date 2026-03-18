@@ -26,13 +26,33 @@ export function useAppearance() {
     localStorage.setItem(LS_DARK, String(darkMode));
   }, [darkMode]);
 
-  // Apply accent gradient as CSS custom properties
+  // Apply accent gradient + override primary color globally
   useEffect(() => {
     const opt = GRADIENT_OPTIONS.find((g) => g.key === accent) || GRADIENT_OPTIONS[0];
-    document.documentElement.style.setProperty("--accent-from", opt.from);
-    document.documentElement.style.setProperty("--accent-to", opt.to);
+    const root = document.documentElement;
+    root.style.setProperty("--accent-from", opt.from);
+    root.style.setProperty("--accent-to", opt.to);
+    // Override the primary color system so all buttons, badges, rings, links pick up the accent
+    root.style.setProperty("--primary", opt.primaryHsl);
+    root.style.setProperty("--ring", opt.ringHsl);
+    root.style.setProperty("--sidebar-primary", opt.primaryHsl);
+    root.style.setProperty("--sidebar-ring", opt.ringHsl);
+    // Accent tints for hover states / backgrounds
+    root.style.setProperty("--accent-foreground", opt.primaryHsl);
+    root.style.setProperty("--sidebar-accent-foreground", opt.primaryHsl);
     localStorage.setItem(LS_GRADIENT, accent);
   }, [accent]);
+
+  // Re-apply primary overrides when dark mode changes
+  useEffect(() => {
+    const opt = GRADIENT_OPTIONS.find((g) => g.key === accent) || GRADIENT_OPTIONS[0];
+    const root = document.documentElement;
+    const hsl = darkMode ? opt.primaryDarkHsl : opt.primaryHsl;
+    root.style.setProperty("--primary", hsl);
+    root.style.setProperty("--ring", hsl);
+    root.style.setProperty("--sidebar-primary", hsl);
+    root.style.setProperty("--sidebar-ring", hsl);
+  }, [darkMode, accent]);
 
   // Logo
   useEffect(() => {
