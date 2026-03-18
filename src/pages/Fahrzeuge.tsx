@@ -40,7 +40,7 @@ const Fahrzeuge = () => {
   // Inserat panel state
   const [inseratOpen, setInseratOpen] = useState(false);
   const [inseratFahrzeug, setInseratFahrzeug] = useState<Fahrzeug | null>(null);
-  const [inseratIsNew, setInseratIsNew] = useState(false);
+  
 
   const allFahrzeuge = useMemo(() => getFahrzeuge(), [refreshKey]);
   const refresh = () => setRefreshKey((k) => k + 1);
