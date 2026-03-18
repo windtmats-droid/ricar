@@ -83,14 +83,6 @@ const Verkauf = () => {
 
   const margeColor = (v: number) => v >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400";
 
-  const zahlungsartBadge = (z?: string) => {
-    if (!z) return null;
-    const cls = z === "Bar" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-      : z === "Finanzierung" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
-      : "bg-muted text-muted-foreground";
-    return <span className={cn("text-[10px] px-2 py-0.5 rounded-full font-medium", cls)}>{z}</span>;
-  };
-
   const df = detailFahrzeug;
 
   return (
