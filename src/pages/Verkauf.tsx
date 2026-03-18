@@ -34,6 +34,13 @@ const Verkauf = () => {
   const [sortBy, setSortBy] = useState<SortKey>("datum");
   const [dateRange, setDateRange] = useState<DateRange>("alle");
   const [detailFahrzeug, setDetailFahrzeug] = useState<Fahrzeug | null>(null);
+  const teamMembers = useMemo(() => getTeam(), []);
+
+  const getVerkaeufername = (id?: string) => {
+    if (!id) return "–";
+    const m = teamMembers.find(t => t.id === id);
+    return m ? `${m.vorname} ${m.nachname}` : "–";
+  };
 
   const verkaufte = useMemo(() => {
     let list = getFahrzeuge().filter((f) => f.status === "verkauft");
