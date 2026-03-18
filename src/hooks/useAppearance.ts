@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-export type AccentGradient = "blue" | "green" | "purple" | "orange" | "red" | "dark";
+export type AccentGradient = "blue" | "green" | "purple" | "orange" | "red" | "dark" | "midnight" | "sky" | "teal" | "indigo" | "rosegold" | "amber" | "classicred" | "crimson";
 
 export const GRADIENT_OPTIONS: { key: AccentGradient; label: string; from: string; to: string; classes: string; primaryHsl: string; primaryDarkHsl: string; ringHsl: string }[] = [
   { key: "blue", label: "Blau", from: "#2563eb", to: "#1e40af", classes: "from-blue-600 to-blue-800", primaryHsl: "211 72% 37%", primaryDarkHsl: "211 72% 50%", ringHsl: "211 72% 37%" },
@@ -9,6 +9,14 @@ export const GRADIENT_OPTIONS: { key: AccentGradient; label: string; from: strin
   { key: "orange", label: "Orange", from: "#f97316", to: "#dc2626", classes: "from-orange-500 to-red-600", primaryHsl: "25 95% 53%", primaryDarkHsl: "25 95% 60%", ringHsl: "25 95% 53%" },
   { key: "red", label: "Rot", from: "#f43f5e", to: "#be185d", classes: "from-rose-500 to-pink-700", primaryHsl: "350 89% 60%", primaryDarkHsl: "350 89% 67%", ringHsl: "350 89% 60%" },
   { key: "dark", label: "Dunkel", from: "#374151", to: "#111827", classes: "from-gray-700 to-gray-900", primaryHsl: "218 11% 35%", primaryDarkHsl: "218 11% 50%", ringHsl: "218 11% 35%" },
+  { key: "midnight", label: "Midnight", from: "#1e293b", to: "#020617", classes: "from-slate-800 to-slate-950", primaryHsl: "217 33% 17%", primaryDarkHsl: "217 33% 35%", ringHsl: "217 33% 17%" },
+  { key: "sky", label: "Sky", from: "#38bdf8", to: "#0891b2", classes: "from-sky-400 to-cyan-600", primaryHsl: "199 89% 48%", primaryDarkHsl: "199 89% 58%", ringHsl: "199 89% 48%" },
+  { key: "teal", label: "Teal", from: "#14b8a6", to: "#047857", classes: "from-teal-500 to-emerald-700", primaryHsl: "173 80% 40%", primaryDarkHsl: "173 80% 50%", ringHsl: "173 80% 40%" },
+  { key: "indigo", label: "Indigo", from: "#6366f1", to: "#3730a3", classes: "from-indigo-500 to-indigo-800", primaryHsl: "239 84% 67%", primaryDarkHsl: "239 84% 74%", ringHsl: "239 84% 67%" },
+  { key: "rosegold", label: "Rose Gold", from: "#fb7185", to: "#db2777", classes: "from-rose-400 to-pink-600", primaryHsl: "350 89% 55%", primaryDarkHsl: "350 89% 65%", ringHsl: "350 89% 55%" },
+  { key: "amber", label: "Amber", from: "#fbbf24", to: "#ea580c", classes: "from-amber-400 to-orange-600", primaryHsl: "38 92% 50%", primaryDarkHsl: "38 92% 58%", ringHsl: "38 92% 50%" },
+  { key: "classicred", label: "Red", from: "#ef4444", to: "#be123c", classes: "from-red-500 to-rose-700", primaryHsl: "0 84% 60%", primaryDarkHsl: "0 84% 67%", ringHsl: "0 84% 60%" },
+  { key: "crimson", label: "Crimson", from: "#b91c1c", to: "#450a0a", classes: "from-red-700 to-red-950", primaryHsl: "0 72% 41%", primaryDarkHsl: "0 72% 55%", ringHsl: "0 72% 41%" },
 ];
 
 const LS_DARK = "app-dark-mode";
