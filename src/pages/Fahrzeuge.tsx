@@ -98,9 +98,9 @@ const Fahrzeuge = () => {
   };
 
   // --- Inserat Panel handlers ---
-  const openInseratFromBestand = (f: Fahrzeug) => { setInseratFahrzeug(f); setInseratIsNew(false); setInseratOpen(true); };
-  const openInseratEdit = (f: Fahrzeug) => { setInseratFahrzeug(f); setInseratIsNew(false); setInseratOpen(true); };
-  const openNewInserat = () => { setInseratFahrzeug(null); setInseratIsNew(true); setInseratOpen(true); };
+  const openInseratFromBestand = (f: Fahrzeug) => { setInseratFahrzeug(f); setInseratOpen(true); };
+  const openInseratEdit = (f: Fahrzeug) => { setInseratFahrzeug(f); setInseratOpen(true); };
+  const openNewInserat = () => { setInseratFahrzeug(null); setInseratOpen(true); };
 
   const handleInseratPublish = (data: Partial<Fahrzeug> & { marke: string; modell: string }) => {
     if (data.id) {
