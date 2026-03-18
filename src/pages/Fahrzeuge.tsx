@@ -67,10 +67,29 @@ const Fahrzeuge = () => {
     toast({ title: "Status aktualisiert" });
   };
 
-  const markAsSold = (id: string) => {
-    updateFahrzeug(id, { status: "verkauft", verkaufsDatum: new Date().toISOString().split("T")[0] });
+  const openVerkaufModal = (f: Fahrzeug) => {
+    setVerkaufFahrzeug(f);
+    setVerkaufOpen(true);
+  };
+
+  const handleVerkaufConfirm = (data: {
+    verkaufspreis: number; kaeuferName: string; kaeuferTelefon: string;
+    kaeuferEmail: string; verkaufsDatum: string; zahlungsart: string; verkaufsNotizen: string;
+  }) => {
+    if (!verkaufFahrzeug) return;
+    updateFahrzeug(verkaufFahrzeug.id, {
+      status: "verkauft",
+      verkaufspreis: data.verkaufspreis,
+      kaeuferName: data.kaeuferName,
+      kaeuferTelefon: data.kaeuferTelefon,
+      kaeuferEmail: data.kaeuferEmail,
+      verkaufsDatum: data.verkaufsDatum,
+      zahlungsart: data.zahlungsart,
+      verkaufsNotizen: data.verkaufsNotizen,
+    });
+    setVerkaufOpen(false);
     refresh();
-    toast({ title: "Als verkauft markiert" });
+    toast({ title: "Verkauf abgeschlossen", description: `${verkaufFahrzeug.marke} ${verkaufFahrzeug.modell} wurde als verkauft markiert.` });
   };
 
   // --- Form Modal handlers ---
