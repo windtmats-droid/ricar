@@ -102,9 +102,10 @@ export function DashboardSidebar() {
                     className={cn(
                       "w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-colors relative",
                       isActive
-                        ? "bg-accent text-accent-foreground font-medium border-l-[3px] border-primary pl-2"
+                        ? "text-white font-medium border-l-[3px] border-white/30 pl-2"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
+                    style={isActive ? { background: "linear-gradient(to right, var(--accent-from, #2563eb), var(--accent-to, #1e40af))" } : undefined}
                   >
                     <item.icon className="w-4 h-4 shrink-0" />
                     <span className="flex-1 text-left">{item.label}</span>

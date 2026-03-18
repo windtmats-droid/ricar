@@ -1,6 +1,6 @@
 export function KiPerformanceBanner() {
   return (
-    <div className="rounded-xl p-4 px-5 text-primary-foreground" style={{ background: "linear-gradient(135deg, hsl(211 72% 37%), hsl(211 60% 50%))" }}>
+    <div className="rounded-xl p-4 px-5 text-primary-foreground" style={{ background: "linear-gradient(135deg, var(--accent-from, #2563eb), var(--accent-to, #1e40af))" }}>
       <div className="flex items-start justify-between">
         <div>
           <div className="text-[11px] uppercase tracking-wider opacity-75 mb-2">KI-Performance diesen Monat</div>
