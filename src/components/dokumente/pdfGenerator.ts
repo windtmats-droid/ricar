@@ -81,7 +81,6 @@ export function generateKaufvertragPdf(v: VerkaeuerData, d: KaufvertragData, nr:
 
   // Verkäufer
   y = heading(doc, y, "Verkäufer");
-  const vY = y;
   y = field(doc, MARGIN, y, "Firma", v.autohausName);
   y = field(doc, MARGIN, y, "Adresse", `${v.strasse}, ${v.plzOrt}`);
   y = field(doc, MARGIN, y, "Tel / E-Mail", `${v.telefon} / ${v.email}`);
