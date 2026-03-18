@@ -2,7 +2,22 @@ import { Pencil, Eye, Archive, AlertTriangle } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import type { FahrzeugRow } from "@/pages/Fahrzeuge";
+
+export interface FahrzeugRow {
+  id: string;
+  marke: string;
+  modell: string;
+  baujahr: number | null;
+  kraftstoff: string | null;
+  getriebe: string | null;
+  preis: number;
+  km: number | null;
+  status: string;
+  vin: string | null;
+  created_at: string;
+  foto_url: string | null;
+  standzeit: number;
+}
 import {
   AlertDialog,
   AlertDialogAction,

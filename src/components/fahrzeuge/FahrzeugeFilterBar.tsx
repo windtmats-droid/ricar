@@ -5,7 +5,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { FahrzeugeFilters } from "@/pages/Fahrzeuge";
+
+export interface FahrzeugeFilters {
+  search: string;
+  status: string;
+  marke: string;
+  kraftstoff: string;
+  preis: string;
+}
 
 interface Props {
   filters: FahrzeugeFilters;
