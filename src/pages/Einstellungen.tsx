@@ -87,6 +87,7 @@ const Einstellungen = () => {
           </div>
 
           <div className="flex-1 min-w-0">
+            {activeTab === "erscheinungsbild" && <ErscheinungsbildSection />}
             {activeTab === "integrationen" && (
               <IntegrationenSection
                 mobilede={{ user: settings?.mobilede_user || "", pw: settings?.mobilede_pw_encrypted || "", kundennr: settings?.mobilede_kundennr || "" }}
