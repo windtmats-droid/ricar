@@ -21,6 +21,7 @@ import ResetPassword from "./pages/ResetPassword.tsx";
 import Analytics from "./pages/Analytics.tsx";
 import Kalkulation from "./pages/Kalkulation.tsx";
 import Dokumente from "./pages/Dokumente.tsx";
+import Chat from "./pages/Chat.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
