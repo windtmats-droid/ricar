@@ -5,6 +5,7 @@ import { IntegrationenSection } from "@/components/einstellungen/IntegrationenSe
 import { TeamSection } from "@/components/einstellungen/TeamSection";
 import { AutoScanSection } from "@/components/einstellungen/AutoScanSection";
 import { ErscheinungsbildSection } from "@/components/einstellungen/ErscheinungsbildSection";
+import { AutohausDatenSection } from "@/components/einstellungen/AutohausDatenSection";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
