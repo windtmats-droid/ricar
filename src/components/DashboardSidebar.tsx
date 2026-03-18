@@ -12,6 +12,7 @@ import {
   Settings,
   LogOut,
   Sparkles,
+  Calculator,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
