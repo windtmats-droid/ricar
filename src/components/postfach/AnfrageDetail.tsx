@@ -51,19 +51,24 @@ export function AnfrageDetail({ anfrage: a, onMarkRead, onArchive }: Props) {
     setKiError(null);
   }
 
-  // Call evaluate-message edge function when anfrage changes
+  // Call evaluate-message edge function once per message selection (debounced by id)
   useEffect(() => {
     let cancelled = false;
 
-    const evaluate = async () => {
+    // Small delay to prevent double-fires when both id and fullMessage change simultaneously
+    const timer = setTimeout(async () => {
+      if (cancelled) return;
+      
       setKiLoading(true);
       setKiError(null);
       setKiEval(null);
 
       try {
-        console.log("Evaluating message:", a.id);
+        const messageText = a.fullMessage || "";
+        console.log("Evaluating message:", a.id, "text length:", messageText.length);
+        
         const { data, error } = await supabase.functions.invoke("evaluate-message", {
-          body: { anfragetext: a.fullMessage },
+          body: { anfragetext: messageText },
         });
 
         if (cancelled) return;
@@ -72,7 +77,6 @@ export function AnfrageDetail({ anfrage: a, onMarkRead, onArchive }: Props) {
 
         console.log("Evaluate response:", data);
 
-        // Edge function now returns clean {bewertung, begruendung, antwort}
         const parsed: KiEvaluation = {
           bewertung: data?.bewertung || "Mittel",
           begruendung: data?.begruendung || "",
@@ -91,11 +95,10 @@ export function AnfrageDetail({ anfrage: a, onMarkRead, onArchive }: Props) {
       } finally {
         if (!cancelled) setKiLoading(false);
       }
-    };
+    }, 100);
 
-    evaluate();
-    return () => { cancelled = true; };
-  }, [a.id, a.fullMessage]);
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [a.id]);
 
   const handleSend = () => {
     toast({ title: "Antwort gesendet", description: `Antwort an ${a.sender} wurde versendet.` });
