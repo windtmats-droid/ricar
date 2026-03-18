@@ -31,6 +31,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <AppearanceInit />
       <BrowserRouter>
         <AuthProvider>
           <Routes>
