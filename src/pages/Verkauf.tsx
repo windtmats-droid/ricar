@@ -157,9 +157,8 @@ const Verkauf = () => {
                     <th className="text-right px-3 py-3 font-medium text-muted-foreground">Verkauf</th>
                     <th className="text-right px-3 py-3 font-medium text-muted-foreground">Marge</th>
                     <th className="text-center px-3 py-3 font-medium text-muted-foreground">Standzeit</th>
-                    <th className="text-left px-3 py-3 font-medium text-muted-foreground">Käufer</th>
+                    <th className="text-left px-3 py-3 font-medium text-muted-foreground">Verkäufer</th>
                     <th className="text-left px-3 py-3 font-medium text-muted-foreground">Datum</th>
-                    <th className="text-center px-3 py-3 font-medium text-muted-foreground">Zahlung</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Aktionen</th>
                   </tr>
                 </thead>
