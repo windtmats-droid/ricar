@@ -3,7 +3,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-const WEBHOOK_URL = "http://91.99.97.102:5678/webhook/5e77672c-77e2-4941-8b13-436cefbf51a6";
+const WEBHOOK_URL = "http://91.99.97.102:5679/beschreibung";
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
