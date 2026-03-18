@@ -205,6 +205,19 @@ const Fahrzeuge = () => {
   const bFilterCount = [bStatus !== "alle", bMarke !== "alle", bKraftstoff !== "alle", bGetriebe !== "alle"].filter(Boolean).length;
   const iFilterCount = [iStatus !== "alle", iMarke !== "alle", iKraftstoff !== "alle", iPreis !== "alle"].filter(Boolean).length;
 
+  const navigate = useNavigate();
+
+  const handleDokumentErstellen = (f: Fahrzeug) => {
+    localStorage.setItem("prefillFahrzeug", JSON.stringify({
+      marke: f.marke, modell: f.modell, typ: f.typ, baujahr: f.baujahr,
+      erstzulassung: f.erstzulassung, km: f.km, farbe: f.farbe, fin: f.fin,
+      kennzeichen: f.kennzeichen, kraftstoff: f.kraftstoff, getriebe: f.getriebe,
+      huBis: f.huBis, tuevBis: f.tuevBis,
+      preis: f.inseratPreis || f.empfohlenerVKPreis || 0,
+    }));
+    navigate("/dokumente");
+  };
+
   const resetBestandFilters = () => { setBSearch(""); setBStatus("alle"); setBMarke("alle"); setBKraftstoff("alle"); setBGetriebe("alle"); setBSort("neueste"); };
   const resetInserateFilters = () => { setISearch(""); setIStatus("alle"); setIMarke("alle"); setIKraftstoff("alle"); setIPreis("alle"); setISort("neueste"); };
 
