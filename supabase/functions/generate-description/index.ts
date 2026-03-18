@@ -24,8 +24,29 @@ Deno.serve(async (req) => {
     console.log("Webhook response status:", res.status);
     console.log("Webhook response body:", raw);
 
-    return new Response(raw, {
-      status: res.status,
+    if (!res.ok) {
+      return new Response(JSON.stringify({ error: "Webhook error", status: res.status }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Parse Claude API response and extract the text
+    let beschreibung = "";
+    try {
+      const parsed = JSON.parse(raw);
+      beschreibung = parsed?.content?.[0]?.text || "";
+      if (!beschreibung && typeof parsed === "string") {
+        beschreibung = parsed;
+      }
+    } catch {
+      // If it's not JSON, use raw text directly
+      beschreibung = raw;
+    }
+
+    console.log("Extracted beschreibung:", beschreibung.substring(0, 100));
+
+    return new Response(JSON.stringify({ beschreibung }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {

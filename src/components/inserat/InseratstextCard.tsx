@@ -34,7 +34,7 @@ export function InseratstextCard({ beschreibung, onChange, getFormData }: Props)
       });
       console.log("Edge function response:", data);
       if (error) throw error;
-      const text = data?.content?.[0]?.text;
+      const text = data?.beschreibung;
       if (text) {
         onChange(text);
       } else {
