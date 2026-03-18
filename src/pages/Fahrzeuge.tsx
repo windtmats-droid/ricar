@@ -433,9 +433,12 @@ const Fahrzeuge = () => {
                           </div>
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => openEditModal(f)}>
                             <Edit className="w-3 h-3" /> Bearbeiten
+                          </Button>
+                          <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => handleDokumentErstellen(f)}>
+                            <FileText className="w-3 h-3" /> Dokument
                           </Button>
                           <Button size="sm" className="text-xs gap-1 flex-1" onClick={() => openInseratFromBestand(f)}>
                             <Tag className="w-3 h-3" /> Inserat
