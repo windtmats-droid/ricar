@@ -9,6 +9,7 @@ import Index from "./pages/Index.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Ankauf from "./pages/Ankauf.tsx";
 import Fahrzeuge from "./pages/Fahrzeuge.tsx";
+import Verkauf from "./pages/Verkauf.tsx";
 import FahrzeugDetail from "./pages/FahrzeugDetail.tsx";
 import Postfach from "./pages/Postfach.tsx";
 import Leads from "./pages/Leads.tsx";
