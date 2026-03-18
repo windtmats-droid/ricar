@@ -7,16 +7,19 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 
 interface ScanResult {
-  marktdurchschnitt?: number;
-  durchschnittspreis?: number;
-  minimum?: number;
-  min_preis?: number;
-  maximum?: number;
-  max_preis?: number;
-  anzahl?: number;
-  anzahl_angebote?: number;
-  bewertung?: string;
-  empfehlung?: string;
+  markt?: {
+    durchschnitt?: number;
+    minimum?: number;
+    maximum?: number;
+    anzahl?: number;
+    preise?: number[];
+  };
+  analyse?: {
+    bewertung?: string;
+    empfehlung?: string;
+    marktpreis?: number;
+    differenz_pct?: number;
+  };
   [key: string]: any;
 }
 
@@ -79,12 +82,12 @@ const MarktScan = () => {
     }
   };
 
-  const avg = result?.marktdurchschnitt ?? result?.durchschnittspreis ?? 0;
-  const min = result?.minimum ?? result?.min_preis ?? 0;
-  const max = result?.maximum ?? result?.max_preis ?? 0;
-  const count = result?.anzahl ?? result?.anzahl_angebote ?? 0;
-  const bewertung = result?.bewertung ?? "";
-  const empfehlung = result?.empfehlung ?? "";
+  const avg = result?.markt?.durchschnitt ?? 0;
+  const min = result?.markt?.minimum ?? 0;
+  const max = result?.markt?.maximum ?? 0;
+  const count = result?.markt?.anzahl ?? 0;
+  const bewertung = result?.analyse?.bewertung ?? "";
+  const empfehlung = result?.analyse?.empfehlung ?? "";
 
   return (
     <div className="flex h-screen w-full bg-background overflow-hidden">
