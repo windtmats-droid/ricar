@@ -7,7 +7,7 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import { useAppearance } from "@/hooks/useAppearance";
 import Index from "./pages/Index.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
-import InseratErstellen from "./pages/InseratErstellen.tsx";
+import Ankauf from "./pages/Ankauf.tsx";
 import Fahrzeuge from "./pages/Fahrzeuge.tsx";
 import FahrzeugDetail from "./pages/FahrzeugDetail.tsx";
 import Postfach from "./pages/Postfach.tsx";
