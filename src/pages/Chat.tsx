@@ -227,7 +227,7 @@ export default function Chat() {
             </div>
             <div>
               <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-4 py-3 text-[13px] text-foreground">
-                <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none [&>p]:mb-2 [&>ul]:mb-2 [&>ul]:list-disc [&>ul]:pl-4">
+                <ReactMarkdown components={{ p: ({children}) => <p className="mb-2">{children}</p>, ul: ({children}) => <ul className="mb-2 list-disc pl-4">{children}</ul> }}>
                   {WELCOME_MESSAGE}
                 </ReactMarkdown>
               </div>
