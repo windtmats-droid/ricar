@@ -124,6 +124,12 @@ const Dokumente = () => {
           <p className="text-[13px] text-muted-foreground">Kaufverträge, Übergabeprotokolle und Rechnungen erstellen</p>
         </div>
 
+        {!verkaeufer.autohausName && (
+          <div className="mb-4 flex items-center gap-2 rounded-lg border border-dashed border-muted-foreground/30 bg-muted/40 px-4 py-2.5 text-[12px] text-muted-foreground">
+            <span>💡</span> Autohaus-Daten in <a href="/einstellungen" className="underline font-medium text-primary hover:text-primary/80">Einstellungen</a> hinterlegen für automatische Vorbefüllung.
+          </div>
+        )}
+
         <div className="grid grid-cols-[1fr_340px] gap-4">
           <div>
             <Tabs value={tab} onValueChange={setTab}>
