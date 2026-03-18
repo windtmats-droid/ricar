@@ -40,7 +40,7 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/inserate/neu" element={<InseratErstellen />} />
+            <Route path="/ankauf" element={<Ankauf />} />
             <Route path="/fahrzeuge" element={<Fahrzeuge />} />
             <Route path="/fahrzeuge/:id" element={<FahrzeugDetail />} />
             <Route path="/postfach" element={<Postfach />} />

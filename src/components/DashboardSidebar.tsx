@@ -1,7 +1,7 @@
 import {
   LayoutDashboard,
   Car,
-  PlusSquare,
+  ShoppingCart,
   Users,
   ScanSearch,
   BarChart3,
@@ -15,7 +15,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { Badge } from "@/components/ui/badge";
 import { useAppearance } from "@/hooks/useAppearance";
 
 const navSections = [
@@ -32,10 +31,10 @@ const navSections = [
     ],
   },
   {
-    label: "Inserate",
+    label: "Fahrzeuge",
     items: [
-      { icon: Car, label: "Inserate", path: "/fahrzeuge", badge: "34", badgeColor: "bg-primary/10 text-primary" },
-      { icon: PlusSquare, label: "Inserat erstellen", path: "/inserate/neu" },
+      { icon: ShoppingCart, label: "Ankauf", path: "/ankauf" },
+      { icon: Car, label: "Fahrzeuge", path: "/fahrzeuge" },
       { icon: Users, label: "Leads & CRM", path: "/leads", badge: "7", badgeColor: "bg-warning/15 text-warning" },
     ],
   },
