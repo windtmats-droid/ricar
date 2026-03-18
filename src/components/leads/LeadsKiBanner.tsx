@@ -9,7 +9,7 @@ interface LeadsKiBannerProps {
 export function LeadsKiBanner({ priorityNames, onShowDetails }: LeadsKiBannerProps) {
   return (
     <div className="mb-4 rounded-[10px] px-[18px] py-[14px] flex items-center justify-between gap-4"
-      style={{ background: "linear-gradient(135deg, var(--accent-from, #2563eb), var(--accent-to, #1e40af))" }}>>
+      style={{ background: "linear-gradient(135deg, var(--accent-from, #2563eb), var(--accent-to, #1e40af))" }}>
       <div className="flex items-center gap-3 min-w-0">
         <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
           <Zap className="w-4 h-4 text-white" />
