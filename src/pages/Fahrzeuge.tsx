@@ -304,7 +304,7 @@ const Fahrzeuge = () => {
                         <Button variant="outline" size="sm" className="text-xs gap-1">
                           <FileText className="w-3 h-3" /> PDF
                         </Button>
-                        <Button variant="destructive" size="sm" className="text-xs gap-1" onClick={() => markAsSold(f.id)}>
+                        <Button variant="destructive" size="sm" className="text-xs gap-1" onClick={() => openVerkaufModal(f)}>
                           <CheckCircle className="w-3 h-3" /> Verkauft
                         </Button>
                       </div>
