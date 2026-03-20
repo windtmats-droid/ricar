@@ -317,6 +317,36 @@ export type Database = {
           },
         ]
       }
+      ki_chats: {
+        Row: {
+          aktualisiert_at: string
+          autohaus_id: string | null
+          erstellt_at: string
+          erstellt_von: string
+          id: string
+          nachrichten: Json
+          titel: string
+        }
+        Insert: {
+          aktualisiert_at?: string
+          autohaus_id?: string | null
+          erstellt_at?: string
+          erstellt_von: string
+          id?: string
+          nachrichten?: Json
+          titel?: string
+        }
+        Update: {
+          aktualisiert_at?: string
+          autohaus_id?: string | null
+          erstellt_at?: string
+          erstellt_von?: string
+          id?: string
+          nachrichten?: Json
+          titel?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           anfrage_id: string | null
